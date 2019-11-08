@@ -6,6 +6,15 @@
   Breakdown of Features,
   Team Member Tasks
   
+  Mock Up is in 3  picture files
+  
+  Description: Rock, Paper Scissors. Self Explanetory. Home page with name and queue button along with leaderboards. Waiting page only says waiting. Pick between Rock, paper, scissors and have a player checker to show when each is ready. When both have selected pick a winner. Leaderboards is based on number of wins.
+  
+  Kevin: Front End
+  Raza: Back End
+  Weerachai: Logic
+  Pavan: Database Management
+  
 # Checkpoint 2 (11/21) (20 Points) :
   Working GUI components with some client side network communication.
   

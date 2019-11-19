@@ -24,7 +24,6 @@ public class SparkDemo {
       noteList.add(note);
       noteList.add(note2);
       Gson gson = new Gson();
-      System.out.println("Hello");
       return gson.toJson(noteList);
     });
   }

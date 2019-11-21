@@ -3,15 +3,34 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 10vmin;
 }
 
-.App-header {
+.Choice-logo{
+  border: 2px solid #09d3ac;
+  height: 20vh;
+}
+
+.App-div{
+  font-size: 20px;
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.Leaderboard-div{
+  font-size: 20px;
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
@@ -19,4 +38,75 @@
 
 .App-link {
   color: #09d3ac;
+}
+
+.Container{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 70% 30%;
+  font-size: calc(10px + 2vmin);
+}
+
+.RPCContainer{
+  display: grid;
+  align-items: center;
+  text-align: center;
+  grid-template-columns: 33% 33% 33%;
+  font-size: calc(10px + 2vmin);
+}
+
+.RPC{
+  width: 30vh;
+}
+
+.Cursive{
+  font-family: cursive;
+}
+
+.Databox{
+  width: 75%;
+  height: 75vh;
+  padding: 8px;
+  align-items: center;
+  border: 2px solid #09d3ac;
+  margin: 0;
+  overflow: auto;
+}
+
+.Idbox {
+  font-size: 20px;
+  font-family: cursive;
+  height: 2vh;
+  width: 40vh;
+  padding: 8px;
+  align-items: center;
+  border: 2px solid #09d3ac;
+  font-size: calc(10px + 2vmin);
+  margin: 0;
+}
+
+.Username{
+  display: flex;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.Button{
+  width: 20vh;
+  font-size: calc(10px + 2vmin);
+}
+
+.PlayerContainer{
+  display: grid;
+  align-items: center;
+  text-align: center;
+  grid-template-columns: 15vh 40vh 30vh;
+  font-size: calc(10px + 2vmin);
+}
+
+.Player{
+  border: 2px solid #09d3ac;
+  width: 100%;
+  height: 5vh;
+  font-size: calc(10px + 2vmin);
 }

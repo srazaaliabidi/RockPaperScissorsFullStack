@@ -5,6 +5,7 @@ import static spark.Spark.*;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
+import spark.Spark;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,8 @@ public class SparkDemo {
 
     // IDEALLY:
     // I think the URL data will be received something like:
-    // "http://localhost:1234/?player1Name=Joe&player1choice=rock&player2Name=Raza&player2choice=scissors"
+    // "http://localhost:1234/playgame?player1Name=Joe&player1choice=rock&player2Name=Raza&player2choice=scissors"
+    Spark.get("/playgame", SparkDemo::managePlayers);
 
   }
 

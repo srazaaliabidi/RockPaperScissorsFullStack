@@ -7,6 +7,9 @@ import java.util.HashMap;
 public class PlayerDTO {
     private ArrayList<HashMap<String, String>> response;
 
+    public PlayerDTO() {
+    }
+
     public PlayerDTO(ArrayList<HashMap<String, String>> response) {
         this.response = response;
     }

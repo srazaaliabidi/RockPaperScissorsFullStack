@@ -2,6 +2,8 @@ package Spark;
 
 import static spark.Spark.*;
 
+import DAO.PlayerDAO;
+import DTO.PlayerDTO;
 import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
@@ -11,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SparkDemo {
-  public String winnerName;
-  public String loserName;
+  public static String winnerName;
+  public static String loserName;
 
   public static void main(String[] args) {
     port(1234);
@@ -27,14 +29,21 @@ public class SparkDemo {
   }
 
   public static String managePlayers(Request req, Response res) {
+    System.out.println("REACHED HERE");
     // Steps for managing game after winner is decided:
     // 1) grab the player1 name and look thru database for matching name
     // 2) if match, update the score property and set winner=True/False
     // 3) if no match, add new doc to database w/ score=0/1 and set  winner=True/False
     // 4) generate JSON from DTO and return it
-    String player1Name = req.queryMap().get("player1Name").value().toString(); // get player 1 name
+    //String player1Name = req.queryMap().get("player1Name").value().toString(); // get player 1 name
 
     // Winners and Losers decided here
+
+    winnerName = "Joe";
+    loserName = "Raza";
+
+    PlayerDAO playerDAO = new PlayerDAO();
+    PlayerDTO playerDTO = playerDAO.get(winnerName, loserName);
 
 
     return "";

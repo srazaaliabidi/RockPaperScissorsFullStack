@@ -1,20 +1,16 @@
 package DAO;
 
 import DTO.PlayerDTO;
-import com.google.gson.*;
-import com.mongodb.*;
-
-import static com.mongodb.client.model.Filters.*;
-
+import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.sun.javadoc.Doc;
 import org.bson.Document;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
-
-import java.util.*;
+import static com.mongodb.client.model.Filters.eq;
 
 public class PlayerDAO {
     PlayerDTO returnPlayerDTO;

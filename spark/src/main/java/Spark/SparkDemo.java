@@ -49,7 +49,7 @@ public class SparkDemo {
     System.out.println(gson.toJson(playerDTO));
     return gson.toJson(playerDTO);
 
- 
+
   }
 
 }

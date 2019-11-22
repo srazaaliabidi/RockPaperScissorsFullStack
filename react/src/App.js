@@ -11,14 +11,13 @@ function App() {
   const [User, setUser] = React.useState('');
   const [statusText, setStatusText] = React.useState('');
 
-  const handleClick = () => {
-    axios.get(`/api?key=${text}`) // promise
-      .then((res) => {
-        setUser(res.data);
-        setStatusText('Waiting');
-      })
-      .catch(console.log);
-  };
+  // const handleClick = () => {
+  //   axios.get(`/api?key=${text}`) // promise
+  //     .then((res) => {
+  //       setUser(res.data);
+  //     })
+  //     .catch(console.log);
+  // };
 
   return (
     <div className="container App-div">
@@ -30,7 +29,7 @@ function App() {
           <pre> </pre>
           <input value={text} onChange={e => setText(e.target.value)} className="Idbox" />
           <pre> </pre>
-          <button onClick={handleClick} className="Cursive Button">Enter</button>
+          <button onClick={()=> setStatusText("Waiting")} className="Cursive Button">Enter</button>
         </div>
         <br></br>
         <div className="RPCContainer">
@@ -72,13 +71,13 @@ function App() {
           </div>
           <div className="Cursive Player">
           <div>
-              Name is here {User}
+              {text}
             </div>
             
           </div>
           <div className="Cursive Player">
           <div>
-              Wait/ready  {statusText}
+             {statusText}
             </div>
            
           </div>
@@ -98,7 +97,7 @@ function App() {
           </div>
           <div className="Cursive Player">
             <div>
-              Wait/ready {statusText}
+              {statusText}
             </div>
           </div>
         </div>

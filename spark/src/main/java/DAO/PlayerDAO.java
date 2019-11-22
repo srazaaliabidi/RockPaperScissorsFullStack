@@ -38,6 +38,13 @@ public class PlayerDAO {
             Document doc = new Document()
                     .append("name", winnerName)
                     .append("score", 1);
+            // Modify responses ArrayList for DTO:
+            HashMap<String, String> tempMap = new HashMap<>();
+            tempMap.put("name", winnerName);
+            tempMap.put("winner", "true");
+            tempMap.put("score", "1");
+            responses.add(tempMap);
+
         }
         else {
             System.out.println("Document Found!");
@@ -47,6 +54,12 @@ public class PlayerDAO {
             int winnerScore = (int) winnerDoc.get("score") + 1;
             System.out.println(winnerScore);
             myColection.updateOne(eq("name", winnerName), new Document("$set", new Document("score", winnerScore)));
+            // Modify responses ArrayList for DTO:
+            HashMap<String, String> tempMap = new HashMap<>();
+            tempMap.put("name", winnerName);
+            tempMap.put("winner", "true");
+            tempMap.put("score", String.valueOf(winnerScore));
+            responses.add(tempMap);
         }
 
         // FOR LOSER
@@ -56,6 +69,12 @@ public class PlayerDAO {
             Document doc = new Document()
                     .append("name", loserName)
                     .append("score", 0);
+            // Modify responses ArrayList for DTO:
+            HashMap<String, String> tempMap = new HashMap<>();
+            tempMap.put("name", loserName);
+            tempMap.put("winner", "false");
+            tempMap.put("score", "0");
+            responses.add(tempMap);
         }
         else {
             System.out.println("Document Found!");
@@ -68,10 +87,17 @@ public class PlayerDAO {
             }
             System.out.println(loserScore);
             myColection.updateOne(eq("name", loserName), new Document("$set", new Document("score", loserScore)));
+            // Modify responses ArrayList for DTO:
+            HashMap<String, String> tempMap = new HashMap<>();
+            tempMap.put("name", loserName);
+            tempMap.put("winner", "false");
+            tempMap.put("score", String.valueOf(loserScore));
+            responses.add(tempMap);
         }
 
         System.out.println("REACHED END OF GET");
-        return new PlayerDTO();
+        returnPlayerDTO = new PlayerDTO(responses);
+        return returnPlayerDTO;
     }
 
 }

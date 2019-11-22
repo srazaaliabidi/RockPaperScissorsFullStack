@@ -5,6 +5,7 @@ import static spark.Spark.*;
 import DAO.PlayerDAO;
 import DTO.PlayerDTO;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -44,9 +45,11 @@ public class SparkDemo {
 
     PlayerDAO playerDAO = new PlayerDAO();
     PlayerDTO playerDTO = playerDAO.get(winnerName, loserName);
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    System.out.println(gson.toJson(playerDTO));
+    return gson.toJson(playerDTO);
 
-
-    return "";
+ 
   }
 
 }

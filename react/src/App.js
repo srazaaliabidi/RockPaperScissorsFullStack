@@ -10,7 +10,7 @@ function App() {
   const [text, setText] = React.useState(''); // creates state variable, retuns tuple
   const [User, setUser] = React.useState('');
   const [statusText, setStatusText] = React.useState('');
-  
+
   const handleClick = () => {
     axios.get(`/api?key=${text}`) // promise
       .then((res) => {
@@ -21,18 +21,19 @@ function App() {
   };
 
   return (
-    <div className="App Container">
-      <div className="App-div">
+    <div className="container App-div">
+
+      <div className="nine columns">
         <br></br>
         <div className="Cursive Username">
           Username:
           <pre> </pre>
-          <input value={text} onChange={e => setText(e.target.value)} className="Idbox"/>
+          <input value={text} onChange={e => setText(e.target.value)} className="Idbox" />
           <pre> </pre>
           <button onClick={handleClick} className="Cursive Button">Enter</button>
         </div>
         <br></br>
-        <div className = "RPCContainer">
+        <div className="RPCContainer">
           <div className="RPC">
             <div>Rock</div>
             <div><img src={rock} className="Choice-logo" alt="Rock" /></div>
@@ -51,54 +52,72 @@ function App() {
         </div>
         &nbsp;
         <div className="PlayerContainer">
-          <div className="Cursive Player">
+          <div className="Cursive">
             Player:
           </div>
-          <div className="Cursive Player">
+          <div className="Cursive">
             Gamertag:
           </div>
-          <div className="Cursive Player">
+          <div className="Cursive">
             Status:
           </div>
         </div>
         <br></br>
+
         <div className="PlayerContainer">
           <div className="Cursive Player">
-            1
+            <div>
+              1
+            </div>
           </div>
           <div className="Cursive Player">
-            {User}
+          <div>
+              Name is here {User}
+            </div>
+            
           </div>
           <div className="Cursive Player">
-            {statusText}
+          <div>
+              Wait/ready  {statusText}
+            </div>
+           
           </div>
         </div>
+
         <br></br>
         <div className="PlayerContainer">
           <div className="Cursive Player">
-            2
+            <div>
+              2
+            </div>
           </div>
           <div className="Cursive Player">
-          
+            <div>
+              Name is here {User}
+            </div>
           </div>
           <div className="Cursive Player">
-          
+            <div>
+              Wait/ready {statusText}
+            </div>
           </div>
         </div>
         <br></br>
       </div>
 
-      <div className="Leaderboard-div Cursive">
-        <img src={logo} className="App-logo" alt="logo" />
-        Leaderboards:
-        <div className="Databox">
-          <div>
-            
-            
-          </div> 
+      <div className="three columns">
+        <div className="Leaderboard-div Cursive">
+          <img src={logo} className="App-logo" alt="logo" />
+          Leaderboards:
+
+          <div className="Databox">
+
+          </div>
+
         </div>
       </div>
     </div>
+
   );
 }
 

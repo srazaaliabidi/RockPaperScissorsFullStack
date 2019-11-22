@@ -2,13 +2,14 @@ package DAO;
 
 import DTO.PlayerDTO;
 import com.google.gson.*;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
+import com.mongodb.*;
+
 import static com.mongodb.client.model.Filters.*;
-import com.mongodb.MongoClient;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.sun.javadoc.Doc;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -28,8 +29,26 @@ public class PlayerDAO {
         System.out.println("REACHED HERE 2");
 //        MongoCursor<Document> cursor = myColection.find().iterator();
         ArrayList<HashMap<String, String>> responses = new ArrayList<>();
+        System.out.println("TRY1");
         Document winnerDoc = myColection.find(eq("name", winnerName)).first();
         Document loserDoc = myColection.find(eq("name", loserName)).first();
+
+//        Document winnerDoc = new Document();
+//        Document loserDoc = new Document();
+//        try {
+//            System.out.println("TRY TO FIND");
+//            winnerDoc = myColection.find(eq("name", winnerName)).first();
+//            loserDoc = myColection.find(eq("name", loserName)).first();
+//        }
+//        catch (Exception e) {
+//            System.out.println("COULD NOT FETCH DOCUMENTS");
+//        }
+//
+//        BasicDBObject whereQuery = new BasicDBObject();
+//        whereQuery.put("name", winnerName);
+//        DBCursor cursor = myColection.find();
+
+        System.out.println("TRY2");
 
         // FOR WINNER
         if (Objects.isNull(winnerDoc) == true) {
@@ -38,6 +57,7 @@ public class PlayerDAO {
             Document doc = new Document()
                     .append("name", winnerName)
                     .append("score", 1);
+            myColection.insertOne(doc);
             // Modify responses ArrayList for DTO:
             HashMap<String, String> tempMap = new HashMap<>();
             tempMap.put("name", winnerName);
@@ -69,6 +89,7 @@ public class PlayerDAO {
             Document doc = new Document()
                     .append("name", loserName)
                     .append("score", 0);
+            myColection.insertOne(doc);
             // Modify responses ArrayList for DTO:
             HashMap<String, String> tempMap = new HashMap<>();
             tempMap.put("name", loserName);

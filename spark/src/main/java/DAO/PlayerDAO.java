@@ -33,21 +33,6 @@ public class PlayerDAO {
         Document winnerDoc = myColection.find(eq("name", winnerName)).first();
         Document loserDoc = myColection.find(eq("name", loserName)).first();
 
-//        Document winnerDoc = new Document();
-//        Document loserDoc = new Document();
-//        try {
-//            System.out.println("TRY TO FIND");
-//            winnerDoc = myColection.find(eq("name", winnerName)).first();
-//            loserDoc = myColection.find(eq("name", loserName)).first();
-//        }
-//        catch (Exception e) {
-//            System.out.println("COULD NOT FETCH DOCUMENTS");
-//        }
-//
-//        BasicDBObject whereQuery = new BasicDBObject();
-//        whereQuery.put("name", winnerName);
-//        DBCursor cursor = myColection.find();
-
         System.out.println("TRY2");
 
         // FOR WINNER

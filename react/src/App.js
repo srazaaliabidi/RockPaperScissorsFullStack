@@ -10,6 +10,7 @@ function App() {
   const [text, setText] = React.useState(''); // creates state variable, retuns tuple
   const [User, setUser] = React.useState('');
   const [statusText, setStatusText] = React.useState('');
+  const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));
 
   // const handleClick = () => {
   //   axios.get(`/api?key=${text}`) // promise
@@ -18,6 +19,29 @@ function App() {
   //     })
   //     .catch(console.log);
   // };
+
+  ws.current.onopen = () => {
+    console.log('Connection open!')
+  };
+
+  ws.current.onmessage = (message) => {
+    console.log('message received')
+    console.log(message);
+    // setClickCount(Number(message.data));
+  };
+
+  ws.current.onclose = () => {
+    console.log('connection closed');
+  };
+
+  ws.current.onerror = () => {
+    console.log('ws error');
+  };
+
+  const handleClick = () => {
+    ws.current.send(text);
+    console.log('message send')
+  };
 
   return (
     <div className="container App-div">
@@ -29,7 +53,7 @@ function App() {
           <pre> </pre>
           <input value={text} onChange={e => setText(e.target.value)} className="Idbox" />
           <pre> </pre>
-          <button onClick={()=> setStatusText("Waiting")} className="Cursive Button">Enter</button>
+          <button onClick={handleClick} className="Cursive Button">Enter</button>
         </div>
         <br></br>
         <div className="RPCContainer">

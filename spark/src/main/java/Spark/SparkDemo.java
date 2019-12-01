@@ -22,6 +22,9 @@ public class SparkDemo {
     // calling get will make your app start listening for the GET path with the /hello endpoint
     //get("/hello", (req, res) -> "Hello World");
 
+    // FOR WEBSOCKET:
+    Spark.webSocket("/ws", WebSocketHandler.class);
+
     // IDEALLY:
     // I think the URL data will be received something like:
     // "http://localhost:1234/playgame?player1Name=Joe&player1choice=rock&player2Name=Raza&player2choice=scissors"

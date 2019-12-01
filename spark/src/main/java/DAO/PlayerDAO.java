@@ -1,19 +1,17 @@
 package DAO;
 
 import DTO.PlayerDTO;
-import com.google.gson.*;
-import com.mongodb.*;
-
-import static com.mongodb.client.model.Filters.*;
-
+import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.sun.javadoc.Doc;
 import org.bson.Document;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
-import java.util.*;
+import static com.mongodb.client.model.Filters.eq;
+
 
 public class PlayerDAO {
     PlayerDTO returnPlayerDTO;
@@ -36,7 +34,7 @@ public class PlayerDAO {
         System.out.println("TRY2");
 
         // FOR WINNER
-        if (Objects.isNull(winnerDoc) == true) {
+        if (Objects.isNull(winnerDoc)) {
             System.out.println("Document not found");
             // If document is not found, a new player is playing and we must add it to database
             Document doc = new Document()
@@ -68,7 +66,7 @@ public class PlayerDAO {
         }
 
         // FOR LOSER
-        if (Objects.isNull(loserDoc) == true) {
+        if (Objects.isNull(loserDoc)) {
             System.out.println("Document not found");
             // If document is not found, a new player is playing and we must add it to database
             Document doc = new Document()

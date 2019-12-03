@@ -141,7 +141,7 @@ function App() {
           <div className="Databox">
           {listLeader.map(noteObject =>
             <div className="App-text">
-                <div> ID is: {noteObject.name}
+                <div> Name is: {noteObject.name}
                   <div>
                     Score is: {noteObject.score}
                   </div>

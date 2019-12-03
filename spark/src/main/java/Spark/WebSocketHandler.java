@@ -74,9 +74,13 @@ public class WebSocketHandler {
             userMap.get(winnerName).getRemote().sendString("WINNER");
             System.out.println("REACHED HERE 3");
             // CLEAR THE MAP OF SESSIONS OF PREVIOUS GAMES:
-            userMap.clear();
+            //userMap.clear();
+            // INSTEAD, TRY CLEARING JUST THE 2 PEOPLE THAT JUST FINISHED PLAYING?:
+            userMap.remove(loserName);
+            userMap.remove(winnerName);
 
         }
+
 
 
 //        clickCountString = message; // save the count

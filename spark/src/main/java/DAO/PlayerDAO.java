@@ -1,8 +1,12 @@
 package DAO;
 
 import DTO.PlayerDTO;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
@@ -103,5 +107,34 @@ public class PlayerDAO {
         returnPlayerDTO = new PlayerDTO(responses);
         return returnPlayerDTO;
     }
+
+
+    public PlayerDTO getAllList() {
+        MongoCursor<Document> cursor = myColection.find().iterator();
+        ArrayList<HashMap<String, String>> responses = new ArrayList<>();
+        HashMap<String, String> tempMap;
+        try{
+            while(cursor.hasNext()){
+                String object = cursor.next().toJson();
+                JsonObject jsonObject = new JsonParser().parse(object).getAsJsonObject();
+                JsonElement id_element = jsonObject.get("_id");
+//                String id_str = id_element.toString().trim();
+//                String id_subStr = id_str.substring(id_str.indexOf(':')+1, id_str.indexOf('}'));
+//                id_subStr = id_subStr.replace("\"", "");
+                JsonElement data_element = jsonObject.get("name");
+                JsonElement date_element = jsonObject.get("score");
+//                String date_element_str =date_element.toString().trim();
+                tempMap = new HashMap<>();
+//                tempMap.put("_id", id_subStr);
+//                tempMap.put("data", data_element.toString().substring(1, data_element.toString().length() - 1));
+//                tempMap.put("date", date_element_str.substring(1, date_element_str.length() - 1));
+                responses.add(tempMap);
+            }
+        }finally {
+            cursor.close();
+        }
+        return new PlayerDTO();
+    }
+
 
 }

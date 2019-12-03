@@ -118,8 +118,11 @@ public class PlayerDAO {
                 JsonElement name_element = jsonObject.get("name");
                 JsonElement score_element = jsonObject.get("score");
                 tempMap = new HashMap<>();
-                tempMap.put("name", String.valueOf(name_element));
-                tempMap.put("score", String.valueOf(score_element));
+                String name_str = String.valueOf(name_element);
+                name_str = name_str.substring(1, name_str.length()-1);
+                String score_str = String.valueOf(score_element);
+                tempMap.put("name", name_str);
+                tempMap.put("score", score_str);
                 responses.add(tempMap);
             }
         } finally {

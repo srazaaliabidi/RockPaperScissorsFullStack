@@ -83,6 +83,11 @@ public class WebSocketHandler {
             userMap.remove(winnerName);
             System.out.println("USERNAP QUEUE SIZE: " + userMap.size());
 
+            System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
+        }
+        else if (userMap.size() == 1) {
+            // DISPLAY WAIT SCREEN
+
         }
         else if (userMap.size() == 1)  {
             System.out.println("TRIGGER WAITSCREEN");

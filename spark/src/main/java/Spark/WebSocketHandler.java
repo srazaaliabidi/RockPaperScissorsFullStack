@@ -78,6 +78,10 @@ public class WebSocketHandler {
             // INSTEAD, TRY CLEARING JUST THE 2 PEOPLE THAT JUST FINISHED PLAYING?:
             userMap.remove(loserName);
             userMap.remove(winnerName);
+            System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
+        }
+        else if (userMap.size() == 1) {
+            // DISPLAY WAIT SCREEN
 
         }
 

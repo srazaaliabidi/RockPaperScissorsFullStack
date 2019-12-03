@@ -9,7 +9,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-
+import spark.Spark;
+import Spark.WebSocketHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -123,6 +124,7 @@ public class PlayerDAO {
                 String score_str = String.valueOf(score_element);
                 tempMap.put("name", name_str);
                 tempMap.put("score", score_str);
+                tempMap.put("numPlayer", String.valueOf(WebSocketHandler.userMap.size()));
                 responses.add(tempMap);
             }
         } finally {
@@ -131,6 +133,5 @@ public class PlayerDAO {
         returnPlayerDTO = new PlayerDTO(responses);
         return returnPlayerDTO;
     }
-
 
 }

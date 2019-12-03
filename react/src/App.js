@@ -10,6 +10,7 @@ function App() {
   const [text, setText] = React.useState(''); // creates state variable, retuns tuple
   const [User, setUser] = React.useState('');
   const [statusText, setStatusText] = React.useState('');
+  const [listLeader, setListLeader] = React.useState([]);
   const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));
 
   // const handleClick = () => {
@@ -40,6 +41,10 @@ function App() {
 
   const handleClick = () => {
     ws.current.send(text);
+    axios.get('/getall')
+    .then((res)=>{
+      setListLeader(res.data.response);
+    })
     console.log('message send')
   };
 
@@ -134,7 +139,15 @@ function App() {
           Leaderboards:
 
           <div className="Databox">
-
+          {listLeader.map(noteObject =>
+            <div className="App-text">
+                <div> ID is: {noteObject.name}
+                  <div>
+                    Score is: {noteObject.score}
+                  </div>
+                </div>
+            </div>
+          )}
           </div>
 
         </div>

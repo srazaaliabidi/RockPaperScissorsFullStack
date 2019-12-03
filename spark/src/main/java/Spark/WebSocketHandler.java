@@ -6,6 +6,15 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
+import static spark.Spark.*;
+import DAO.PlayerDAO;
+import DTO.PlayerDTO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import spark.Request;
+import spark.Response;
+import spark.Spark;
+
 @WebSocket
 public class WebSocketHandler {
     // Store sessions if you want to, for example, broadcast a message to all users
@@ -23,6 +32,8 @@ public class WebSocketHandler {
             }
         });
     }
+
+
 
     @OnWebSocketConnect
     public void connected(Session session) throws IOException {
@@ -52,13 +63,15 @@ public class WebSocketHandler {
             ArrayList<String> playerNames = new ArrayList<>(userMap.keySet());
             // WAIT FOR BOTH R/P/S INPUTS FROM THE 2 PLAYERS
             // ONCE 2 INPUTS ARE CHOSEN, DECIDE WHO WINS HERE
+            String winnerName = playerNames.get(0);
+            String loserName = playerNames.get(1);
             // UPDATE THE DATABASE
+            PlayerDAO playerDAO = new PlayerDAO();
+            PlayerDTO playerDTO = playerDAO.get(winnerName, loserName);
             // TO EACH RESPECTIVE SESSION, SEND BACK MESSAGE STATING IF THEY WON OR LOST
-            String player1 = playerNames.get(0);
-            String player2 = playerNames.get(1);
             System.out.println("REACHED HERE 2");
-            userMap.get(player1).getRemote().sendString("LOSER");
-            userMap.get(player2).getRemote().sendString("WINNER");
+            userMap.get(loserName).getRemote().sendString("LOSER");
+            userMap.get(winnerName).getRemote().sendString("WINNER");
             System.out.println("REACHED HERE 3");
             // CLEAR THE MAP OF SESSIONS OF PREVIOUS GAMES:
             userMap.clear();

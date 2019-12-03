@@ -1,7 +1,6 @@
 package Spark;
 
 import static spark.Spark.*;
-
 import DAO.PlayerDAO;
 import DTO.PlayerDTO;
 import com.google.gson.Gson;

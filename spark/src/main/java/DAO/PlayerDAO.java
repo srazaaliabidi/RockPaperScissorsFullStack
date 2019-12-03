@@ -52,8 +52,7 @@ public class PlayerDAO {
             tempMap.put("score", "1");
             responses.add(tempMap);
 
-        }
-        else {
+        } else {
             System.out.println("Document Found!");
             // If document is found, it is a returning player and must update their document score
             System.out.println(winnerDoc);
@@ -83,8 +82,7 @@ public class PlayerDAO {
             tempMap.put("winner", "false");
             tempMap.put("score", "0");
             responses.add(tempMap);
-        }
-        else {
+        } else {
             System.out.println("Document Found!");
             // If document is found, it is a returning player and must update their document score
             System.out.println(loserDoc);
@@ -113,27 +111,22 @@ public class PlayerDAO {
         MongoCursor<Document> cursor = myColection.find().iterator();
         ArrayList<HashMap<String, String>> responses = new ArrayList<>();
         HashMap<String, String> tempMap;
-        try{
-            while(cursor.hasNext()){
+        try {
+            while (cursor.hasNext()) {
                 String object = cursor.next().toJson();
                 JsonObject jsonObject = new JsonParser().parse(object).getAsJsonObject();
-                JsonElement id_element = jsonObject.get("_id");
-//                String id_str = id_element.toString().trim();
-//                String id_subStr = id_str.substring(id_str.indexOf(':')+1, id_str.indexOf('}'));
-//                id_subStr = id_subStr.replace("\"", "");
-                JsonElement data_element = jsonObject.get("name");
-                JsonElement date_element = jsonObject.get("score");
-//                String date_element_str =date_element.toString().trim();
+                JsonElement name_element = jsonObject.get("name");
+                JsonElement score_element = jsonObject.get("score");
                 tempMap = new HashMap<>();
-//                tempMap.put("_id", id_subStr);
-//                tempMap.put("data", data_element.toString().substring(1, data_element.toString().length() - 1));
-//                tempMap.put("date", date_element_str.substring(1, date_element_str.length() - 1));
+                tempMap.put("name", String.valueOf(name_element));
+                tempMap.put("score", String.valueOf(score_element));
                 responses.add(tempMap);
             }
-        }finally {
+        } finally {
             cursor.close();
         }
-        return new PlayerDTO();
+        returnPlayerDTO = new PlayerDTO(responses);
+        return returnPlayerDTO;
     }
 
 

@@ -19,7 +19,7 @@ import spark.Spark;
 public class WebSocketHandler {
     // Store sessions if you want to, for example, broadcast a message to all users
     static Map<Session, Session> sessionMap = new ConcurrentHashMap<>();
-    static Map<String, Session> userMap = new ConcurrentHashMap<>(); // GAMERTAG IS KEY, GENERATED SESSION OBJECT IS VALUE
+    public static Map<String, Session> userMap = new ConcurrentHashMap<>(); // GAMERTAG IS KEY, GENERATED SESSION OBJECT IS VALUE
 
     public static void broadcast(String message) {
         sessionMap.keySet().stream()
@@ -38,6 +38,8 @@ public class WebSocketHandler {
     @OnWebSocketConnect
     public void connected(Session session) throws IOException {
         System.out.println("A client has connected");
+//        System.out.println("USERNAP QUEUE SIZE: " + userMap.size());
+
         //sessionMap.put(session, session);
         //session.getRemote().sendString(clickCountString); // and send it back
     }
@@ -56,6 +58,7 @@ public class WebSocketHandler {
         // ENTER IS PRESSED:
         System.out.println("Got: " + message);   // Print message
         userMap.put(message, session); // ADD TO USERMAP
+        System.out.println("USERNAP QUEUE SIZE: " + userMap.size());
         // WAITING MESSAGE SHOULD BE DISPLAYED
         // IF ANOTHER SESSION IS PRESENT IN USERMAP, PAIR THEM UP:
         if (userMap.size() == 2) {
@@ -78,7 +81,11 @@ public class WebSocketHandler {
             // INSTEAD, TRY CLEARING JUST THE 2 PEOPLE THAT JUST FINISHED PLAYING?:
             userMap.remove(loserName);
             userMap.remove(winnerName);
+            System.out.println("USERNAP QUEUE SIZE: " + userMap.size());
 
+        }
+        else if (userMap.size() == 1)  {
+            System.out.println("TRIGGER WAITSCREEN");
         }
 
 

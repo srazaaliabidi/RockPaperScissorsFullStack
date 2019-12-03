@@ -29,7 +29,6 @@ public class SparkDemo {
     // "http://localhost:1234/playgame?player1Name=Joe&player1choice=rock&player2Name=Raza&player2choice=scissors"
     Spark.get("/playgame", SparkDemo::managePlayers);
     Spark.get("/getall", SparkDemo::getForLeaderboard);
-
   }
 
   public static String managePlayers(Request req, Response res) {
@@ -62,7 +61,6 @@ public class SparkDemo {
     System.out.println(gson.toJson(playerDTO));
     return gson.toJson(playerDTO);
   }
-
 
 
 }

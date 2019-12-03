@@ -41,6 +41,7 @@ function App() {
 
   const handleClick = () => {
     ws.current.send(text);
+    axios.get('/getactive')
     axios.get('/getall')
     .then((res)=>{
       setListLeader(res.data.response);
@@ -50,6 +51,12 @@ function App() {
 
   return (
     <div className="container App-div">
+    <div>
+          {listLeader.map(noteObject =>
+                <div> number of player is: {noteObject.numPlayer}
+                </div>
+          )}
+          </div>
 
       <div className="nine columns">
         <br></br>

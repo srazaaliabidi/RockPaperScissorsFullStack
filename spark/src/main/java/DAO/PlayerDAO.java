@@ -12,6 +12,7 @@ import java.util.Objects;
 
 import static com.mongodb.client.model.Filters.eq;
 
+
 public class PlayerDAO {
     PlayerDTO returnPlayerDTO;
 
@@ -33,7 +34,7 @@ public class PlayerDAO {
         System.out.println("TRY2");
 
         // FOR WINNER
-        if (Objects.isNull(winnerDoc) == true) {
+        if (Objects.isNull(winnerDoc)) {
             System.out.println("Document not found");
             // If document is not found, a new player is playing and we must add it to database
             Document doc = new Document()
@@ -65,7 +66,7 @@ public class PlayerDAO {
         }
 
         // FOR LOSER
-        if (Objects.isNull(loserDoc) == true) {
+        if (Objects.isNull(loserDoc)) {
             System.out.println("Document not found");
             // If document is not found, a new player is playing and we must add it to database
             Document doc = new Document()

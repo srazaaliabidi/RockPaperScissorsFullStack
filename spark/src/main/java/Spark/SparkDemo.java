@@ -1,7 +1,6 @@
 package Spark;
 
 import static spark.Spark.*;
-
 import DAO.PlayerDAO;
 import DTO.PlayerDTO;
 import com.google.gson.Gson;
@@ -21,6 +20,9 @@ public class SparkDemo {
     port(1234);
     // calling get will make your app start listening for the GET path with the /hello endpoint
     //get("/hello", (req, res) -> "Hello World");
+
+    // FOR WEBSOCKET:
+    Spark.webSocket("/ws", WebSocketHandler.class);
 
     // IDEALLY:
     // I think the URL data will be received something like:

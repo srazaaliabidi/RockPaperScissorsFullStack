@@ -113,7 +113,7 @@ function App() {
         </div>
 
         <br></br>
-        <div className="PlayerContainer">
+        {/* <div className="PlayerContainer">
           <div className="Cursive Player">
             <div>
               2
@@ -129,7 +129,7 @@ function App() {
               {statusText}
             </div>
           </div>
-        </div>
+        </div> */}
         <br></br>
       </div>
 
@@ -141,7 +141,7 @@ function App() {
           <div className="Databox">
           {listLeader.map(noteObject =>
             <div className="App-text">
-                <div> ID is: {noteObject.name}
+                <div> Name is: {noteObject.name}
                   <div>
                     Score is: {noteObject.score}
                   </div>

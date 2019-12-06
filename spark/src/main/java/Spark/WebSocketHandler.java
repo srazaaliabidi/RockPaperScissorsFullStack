@@ -57,7 +57,10 @@ public class WebSocketHandler {
 
         // ENTER IS PRESSED:
         System.out.println("Got: " + message);   // Print message
+
+        String gamerTag = message.split(" ")[0];
         userMap.put(message, session); // ADD TO USERMAP
+
         System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
         // WAITING MESSAGE SHOULD BE DISPLAYED
         // IF ANOTHER SESSION IS PRESENT IN USERMAP, PAIR THEM UP:
@@ -72,51 +75,57 @@ public class WebSocketHandler {
 
             String winnerName = playerNames.get(0);
             String loserName = playerNames.get(1);
-            String player1 = playerNames.get(0);
-            String player2 = playerNames.get(1);
+            String player1 = playerNames.get(0); // Joe Rock
+            String player2 = playerNames.get(1); // Raza Paper
+
+            // Game Logic:
+            String playerName1 = player1.split(" ")[0];
+            String playerChoice1 = player1.split(" ")[1];
+            String playerName2 = player2.split(" ")[0];
+            String playerChoice2 = player2.split(" ")[1];
 
             //Basic logic:
-            switch (player1) {
+            switch (playerChoice1) {
                 case "Rock":
-                    switch (player2) {
+                    switch (playerChoice2) {
                         case "Rock":
                             //not sure what to put down for ties as of now so I'll print a tie
                             System.out.println("Its a tie");
                             break;
                         case "Paper":
-                            winnerName = player2;
-                            loserName = player1;
+                            winnerName = playerName2;
+                            loserName = playerName1;
                             break;
                         case "Scissors":
-                            winnerName = player1;
-                            loserName = player2;
+                            winnerName = playerName1;
+                            loserName = playerName2;
                     }
                     break;
 
                 case "Paper":
-                    switch (player2) {
+                    switch (playerChoice2) {
                         case "Rock":
-                            winnerName = player1;
-                            loserName = player2;
+                            winnerName = playerName1;
+                            loserName = playerName2;
                             break;
                         case "Paper":
                             System.out.println("Its a tie");
                             break;
                         case "Scissors":
-                            winnerName = player2;
-                            loserName = player1;
+                            winnerName = playerName2;
+                            loserName = playerName1;
                             break;
                     }
                     break;
                 case "Scissors":
-                    switch(player2) {
+                    switch(playerChoice2) {
                         case "Rock":
-                           winnerName = player2;
-                           loserName = player1;
+                           winnerName = playerName2;
+                           loserName = playerName1;
                             break;
                         case "Paper":
-                            winnerName = player1;
-                            loserName = player2;
+                            winnerName = playerName1;
+                            loserName = playerName2;
                             break;
                         case "Scissors":
                             System.out.println("It is a tie");
@@ -143,10 +152,6 @@ public class WebSocketHandler {
             System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
 
             System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
-        }
-        else if (userMap.size() == 1) {
-            // DISPLAY WAIT SCREEN
-
         }
         else if (userMap.size() == 1)  {
             System.out.println("TRIGGER WAITSCREEN");

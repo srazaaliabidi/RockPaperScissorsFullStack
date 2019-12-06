@@ -41,7 +41,7 @@ function App() {
 
   const handleClick = () => {
     ws.current.send(text);
-    axios.get('/getactive')
+    // axios.get('/getactive')
     axios.get('/getall')
       .then((res) => {
         setListLeader(res.data.response);

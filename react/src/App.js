@@ -43,20 +43,27 @@ function App() {
     ws.current.send(text);
     axios.get('/getactive')
     axios.get('/getall')
-    .then((res)=>{
-      setListLeader(res.data.response);
-    })
+      .then((res) => {
+        setListLeader(res.data.response);
+      })
     console.log('message send')
   };
 
   return (
     <div className="container App-div">
-    <div>
-          {listLeader.map(noteObject =>
-                <div> number of player is: {noteObject.numPlayer}
-                </div>
-          )}
+      <div>
+        
+        {listLeader.map(noteObject =>
+          <div> number of player is: {noteObject.numPlayer}
+            <div>
+              {noteObject.numPlayer == 1 && (
+                <p> I'm here </p>
+              )}
+            </div>
           </div>
+
+        )}
+      </div>
 
       <div className="nine columns">
         <br></br>
@@ -106,16 +113,16 @@ function App() {
             </div>
           </div>
           <div className="Cursive Player">
-          <div>
+            <div>
               {text}
             </div>
-            
+
           </div>
           <div className="Cursive Player">
-          <div>
-             {statusText}
+            <div>
+              {statusText}
             </div>
-           
+
           </div>
         </div>
 
@@ -146,15 +153,15 @@ function App() {
           Leaderboards:
 
           <div className="Databox">
-          {listLeader.map(noteObject =>
-            <div className="App-text">
+            {listLeader.map(noteObject =>
+              <div className="App-text">
                 <div> Name is: {noteObject.name}
                   <div>
                     Score is: {noteObject.score}
                   </div>
                 </div>
-            </div>
-          )}
+              </div>
+            )}
           </div>
 
         </div>

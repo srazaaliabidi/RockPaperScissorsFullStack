@@ -1,5 +1,6 @@
 package Spark;
 
+import DTO.TransferDTO;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import java.io.*;
@@ -25,12 +26,12 @@ public class WebSocketHandler {
         sessionMap.keySet().stream()
                 .filter(Session::isOpen)
                 .forEach(session -> {
-            try {
-                session.getRemote().sendString(message);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+                    try {
+                        session.getRemote().sendString(message);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
 
@@ -58,99 +59,62 @@ public class WebSocketHandler {
         // ENTER IS PRESSED:
         System.out.println("Got: " + message);   // Print message
 
-        String gamerTag = message.split(" ")[0];
-        userMap.put(gamerTag, session); // ADD TO USERMAP
+        // CREATE GSON INSTANCE AND USE IT TO INITIALIZE TRANSFERDTO OBJECT:
+        Gson gson = new Gson();
+        TransferDTO transferDTO_1 = gson.fromJson(message, TransferDTO.class);
+        // ADD TO USERMAP WITH GAMERTAG AS KEY IF CHOICE FIELD IS EMPTY:
+        if (transferDTO_1.choice.equals("")) {
+            String playerName = transferDTO_1.name;
+            userMap.put(playerName, session);
+        }
 
         System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
         // WAITING MESSAGE SHOULD BE DISPLAYED
         // IF ANOTHER SESSION IS PRESENT IN USERMAP, PAIR THEM UP:
-        //username: "Barack Rock"
         if (userMap.size() == 2) {
             System.out.println("REACHED HERE");
-            ArrayList<String> playerNames = new ArrayList<>(userMap.keySet());
-            // WAIT FOR BOTH R/P/S INPUTS FROM THE 2 PLAYERS
-            // ONCE 2 INPUTS ARE CHOSEN, DECIDE WHO WINS HERE
+//            ArrayList<String> playerNames = new ArrayList<>(userMap.keySet());
+            // ARRAYLIST OF GENERATED TRANSFERDTO OBJECTS DURING GAMEPLAY (SHOULD BE 1 FROM EACH OF THE 2 PLAYERS):
+            ArrayList<TransferDTO> gameStatsList = new ArrayList<>();
+            // THIS IS THE TRANSFERDTO OBJECT WITH THE R/P/S INPUTS FROM THE PLAYER:
+            TransferDTO transferDTO_2 = gson.fromJson(message, TransferDTO.class);
+            gameStatsList.add(transferDTO_2);
+            String winnerName = "";
+            String loserName = "";
 
-            // String winnerName, loserName;
+            // GAME LOGIC IS CALCULATED ONCE GAME ENDS. THIS IS INDICATED WHEN GAMESTATSLIST HAS A SIZE OF 2:
+            if (gameStatsList.size() == 2) {
+                String player1Name = gameStatsList.get(0).name;
+                String player1Choice = gameStatsList.get(0).choice;
+                String player2Name = gameStatsList.get(1).name;
+                String player2Choice = gameStatsList.get(1).choice;
 
-            String winnerName = playerNames.get(0);
-            String loserName = playerNames.get(1);
-            String player1 = playerNames.get(0); // Joe Rock
-            String player2 = playerNames.get(1); // Raza Paper
+                // DECIDE WINNER AND LOSER HERE. GAMELOGIC IS WRAPPED IN playGame METHOD AT BOTTOM
+                String[] gameResults = playGame(player1Name, player1Choice, player2Name, player2Choice);
 
-            // Game Logic:
-            String playerName1 = player1.split(" ")[0];
-            String playerChoice1 = player1.split(" ")[1];
-            String playerName2 = player2.split(" ")[0];
-            String playerChoice2 = player2.split(" ")[1];
+                // IF THERE IS A TIE:
+                if (gameResults[0].equals("tie")) {
+                    userMap.get(player1Name).getRemote().sendString("TIE");
+                    userMap.get(player2Name).getRemote().sendString("TIE");
+                }
+                // OTHERWISE:
+                else {
+                    winnerName = gameResults[0];
+                    loserName = gameResults[1];
+                    // UPDATE THE DATABASE
+                    PlayerDAO playerDAO = new PlayerDAO();
+                    PlayerDTO playerDTO = playerDAO.get(winnerName, loserName);
+                    // TO EACH RESPECTIVE SESSION, SEND BACK MESSAGE STATING IF THEY WON OR LOST
+                    userMap.get(loserName).getRemote().sendString("LOSER");
+                    userMap.get(winnerName).getRemote().sendString("WINNER");
+                }
 
-            //Basic logic:
-            switch (playerChoice1) {
-                case "Rock":
-                    switch (playerChoice2) {
-                        case "Rock":
-                            //not sure what to put down for ties as of now so I'll print a tie
-                            System.out.println("Its a tie");
-                            break;
-                        case "Paper":
-                            winnerName = playerName2;
-                            loserName = playerName1;
-                            break;
-                        case "Scissors":
-                            winnerName = playerName1;
-                            loserName = playerName2;
-                    }
-                    break;
-
-                case "Paper":
-                    switch (playerChoice2) {
-                        case "Rock":
-                            winnerName = playerName1;
-                            loserName = playerName2;
-                            break;
-                        case "Paper":
-                            System.out.println("Its a tie");
-                            break;
-                        case "Scissors":
-                            winnerName = playerName2;
-                            loserName = playerName1;
-                            break;
-                    }
-                    break;
-                case "Scissors":
-                    switch(playerChoice2) {
-                        case "Rock":
-                           winnerName = playerName2;
-                           loserName = playerName1;
-                            break;
-                        case "Paper":
-                            winnerName = playerName1;
-                            loserName = playerName2;
-                            break;
-                        case "Scissors":
-                            System.out.println("It is a tie");
-                            break;
+                // CLEAR THE GAMESTATSLIST FOR FUTURE PLAYERS
+                gameStatsList.clear();
             }
-        }
-
-
-           //String winnerName = playerNames.get(0);
-           // String loserName = playerNames.get(1);
-            // UPDATE THE DATABASE
-            PlayerDAO playerDAO = new PlayerDAO();
-            PlayerDTO playerDTO = playerDAO.get(winnerName, loserName);
-            // TO EACH RESPECTIVE SESSION, SEND BACK MESSAGE STATING IF THEY WON OR LOST
-            System.out.println("REACHED HERE 2");
-            userMap.get(loserName).getRemote().sendString("LOSER");
-            userMap.get(winnerName).getRemote().sendString("WINNER");
-            System.out.println("REACHED HERE 3");
-            // CLEAR THE MAP OF SESSIONS OF PREVIOUS GAMES:
-            //userMap.clear();
             // INSTEAD, TRY CLEARING JUST THE 2 PEOPLE THAT JUST FINISHED PLAYING?:
             userMap.remove(loserName);
             userMap.remove(winnerName);
-            System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
-
             System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
         }
         else if (userMap.size() == 1)  {
@@ -158,8 +122,75 @@ public class WebSocketHandler {
         }
 
 
-
-//        clickCountString = message; // save the count
-//        broadcast(message);
     }
+
+    // GAME LOGIC HERE
+    public String[] playGame(String playerName1, String playerChoice1, String playerName2, String playerChoice2) {
+        //Basic logic:
+        String winnerName = "";
+        String loserName = "";
+        boolean tie = false;
+        switch (playerChoice1) {
+            case "Rock":
+                switch (playerChoice2) {
+                    case "Rock":
+                        //not sure what to put down for ties as of now so I'll print a tie
+                        System.out.println("Its a tie");
+                        tie = true;
+                        break;
+                    case "Paper":
+                        winnerName = playerName2;
+                        loserName = playerName1;
+                        break;
+                    case "Scissors":
+                        winnerName = playerName1;
+                        loserName = playerName2;
+                }
+                break;
+
+            case "Paper":
+                switch (playerChoice2) {
+                    case "Rock":
+                        winnerName = playerName1;
+                        loserName = playerName2;
+                        break;
+                    case "Paper":
+                        System.out.println("Its a tie");
+                        tie = true;
+                        break;
+                    case "Scissors":
+                        winnerName = playerName2;
+                        loserName = playerName1;
+                        break;
+                }
+                break;
+            case "Scissors":
+                switch(playerChoice2) {
+                    case "Rock":
+                        winnerName = playerName2;
+                        loserName = playerName1;
+                        break;
+                    case "Paper":
+                        winnerName = playerName1;
+                        loserName = playerName2;
+                        break;
+                    case "Scissors":
+                        System.out.println("It is a tie");
+                        tie = true;
+                        break;
+                }
+        }
+        String[] list = new String[2];
+        if (tie) {
+            list[0] = "tie";
+            list[1] = "tie";
+            return list;
+        }
+        else {
+            list[0] = winnerName;
+            list[1] = loserName;
+            return list;
+        }
+    }
+
 }

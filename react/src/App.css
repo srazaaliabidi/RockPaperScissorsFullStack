@@ -57,6 +57,9 @@
 .space{
   height: 1vh;
 }
+.mediumspace{
+  height: 5vh;
+}
 .bigspace{
   height: 35vh;
 }
@@ -70,7 +73,7 @@
   font-size: calc(10px + 2vmin);
 }
 .Button2{
-  width: 25vh;
+  width: 30vh;
   font-size: calc(10px + 2vmin);
 }
 .Player{

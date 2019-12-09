@@ -46,7 +46,9 @@ function Home() {
   return (
     <div className="App-div Cursive">
 
-      <pre> </pre>
+      <div className="mediumspace textright">
+        <button onClick={handleClick} className="Cursive Button2">Manual Refresh</button>
+      </div>
 
       <div className="textcenter">
         Team Keyboard Presents:
@@ -84,10 +86,16 @@ function Home() {
         Please Enter a Username:
       </div>
 
+      <div className="mediumspace textcenter">
+        {text}
+      </div>
+
+
+
       <div className="space"></div>
 
       <div className="textcenter">
-        <input className="Idbox" />
+        <input onChange={e => setText(e.target.value)} className="Idbox" />
       </div>
 
       <div className="space"></div>
@@ -251,7 +259,7 @@ function Game() {
               </div>
 
             </div>
-          </div> 
+          </div>
           <div className="space"></div>
           <div className="PlayerContainer">
             <div className="Player">

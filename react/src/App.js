@@ -12,15 +12,11 @@ import paper from './Paper.png';
 import scissors from './Scissors.png';
 import axios from 'axios';
 import './App.css';
-
-
 //Really basic Home page right now
 //Refresh leaderboard button at the top for easy checking
 //Enter a username and click next, takes you to waiting page
 function Home() {
   const [text, setText] = React.useState(''); // creates state variable, retuns tuple
-  const [User, setUser] = React.useState('');
-  const [statusText, setStatusText] = React.useState('');
   const [listLeader, setListLeader] = React.useState([]);
   const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));
   const alertText = 'Please enter a valid Username (Single word, no spcaes)';
@@ -242,7 +238,6 @@ function Game() {
   };
   return (
     <div className="App-div Cursive">
-
       <pre> </pre>
       <pre> </pre>
 

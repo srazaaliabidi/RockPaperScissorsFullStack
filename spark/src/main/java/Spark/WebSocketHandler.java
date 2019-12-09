@@ -59,7 +59,7 @@ public class WebSocketHandler {
         System.out.println("Got: " + message);   // Print message
 
         String gamerTag = message.split(" ")[0];
-        userMap.put(message, session); // ADD TO USERMAP
+        userMap.put(gamerTag, session); // ADD TO USERMAP
 
         System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
         // WAITING MESSAGE SHOULD BE DISPLAYED

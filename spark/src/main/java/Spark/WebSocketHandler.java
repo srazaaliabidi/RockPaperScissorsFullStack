@@ -72,6 +72,10 @@ public class WebSocketHandler {
         // WAITING MESSAGE SHOULD BE DISPLAYED
         // IF ANOTHER SESSION IS PRESENT IN USERMAP, PAIR THEM UP:
         if (userMap.size() == 2) {
+            // SEND MESSAGE TO REACT FRONTEND SIGNALING START OF GAME B/W 2 PLAYERS
+            for (String key : userMap.keySet()) {
+                userMap.get(key).getRemote().sendString("REMOVE_WAITSCREEN_PLAY_GAME");
+            }
             System.out.println("REACHED HERE");
 //            ArrayList<String> playerNames = new ArrayList<>(userMap.keySet());
             // ARRAYLIST OF GENERATED TRANSFERDTO OBJECTS DURING GAMEPLAY (SHOULD BE 1 FROM EACH OF THE 2 PLAYERS):
@@ -111,14 +115,18 @@ public class WebSocketHandler {
 
                 // CLEAR THE GAMESTATSLIST FOR FUTURE PLAYERS
                 gameStatsList.clear();
+                // TRY CLEARING JUST THE 2 PEOPLE THAT JUST FINISHED PLAYING?:
+                userMap.remove(loserName);
+                userMap.remove(winnerName);
             }
-            // INSTEAD, TRY CLEARING JUST THE 2 PEOPLE THAT JUST FINISHED PLAYING?:
-            userMap.remove(loserName);
-            userMap.remove(winnerName);
+
             System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
         }
+
         else if (userMap.size() == 1)  {
             System.out.println("TRIGGER WAITSCREEN");
+            String playerName = transferDTO_1.name;
+            userMap.get(playerName).getRemote().sendString("WAITSCREEN");
         }
 
 

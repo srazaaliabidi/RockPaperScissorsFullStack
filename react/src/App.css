@@ -27,6 +27,22 @@
   margin: auto;
   overflow: auto;
 }
+.border1{
+  border: 1px solid #09d3ac;
+  width: 50%;
+}
+.border2{
+  border: 1px solid #09d3ac;
+}
+.Idbox {
+  height: 5vh;
+  width: 80%;
+  padding: 8px;
+  align-items: center;
+  border: 2px solid #09d3ac;
+  
+  margin: 0;
+}
 
 .Container{
   width: 100%;

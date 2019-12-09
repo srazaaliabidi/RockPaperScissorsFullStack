@@ -42,12 +42,21 @@ function Home() {
   const handleClick = () => {
     window.location = '/waiting';
   };
+  const leaderboardRefresh = () => {
+    ws.current.send(text);
+    axios.get('/getall')
+      .then((res) => {
+        setListLeader(res.data.response);
+      })
+    console.log('message send')
+
+  }
 
   return (
     <div className="App-div Cursive">
 
       <div className="mediumspace textright">
-        <button onClick={handleClick} className="Cursive Button2">Manual Refresh</button>
+        <button onClick={leaderboardRefresh} className="Cursive Button2">Manual Refresh</button>
       </div>
 
       <div className="textcenter">
@@ -81,27 +90,29 @@ function Home() {
       </div>
 
       <pre> </pre>
+      <div className="border1 centered">
+        <div className="textcenter">
+          Please Enter a Username:
+        </div>
 
-      <div className="textcenter">
-        Please Enter a Username:
-      </div>
-
-      <div className="mediumspace textcenter">
-        {text}
-      </div>
+        <div className="mediumspace textcenter">
+          {text}
+        </div>
 
 
 
-      <div className="space"></div>
+        <div className="space"></div>
 
-      <div className="textcenter">
-        <input onChange={e => setText(e.target.value)} className="Idbox" />
-      </div>
+        <div className="textcenter">
+          <input onChange={e => setText(e.target.value)} className="Idbox" />
+        </div>
 
-      <div className="space"></div>
+        <div className="space"></div>
 
-      <div className="textcenter">
-        <button onClick={handleClick} className="Cursive Button">Enter</button>
+        <div className="textcenter">
+          <button onClick={handleClick} className="Cursive Button">Enter</button>
+        </div>
+        <div className="space"></div>
       </div>
 
       <pre> </pre>
@@ -113,8 +124,11 @@ function Home() {
 
       <div className="Leaderboard textcenter">
         {listLeader.map(noteObject =>
-          <div className="App-text">
-            <div> Gamertag: {noteObject.name}
+          <div className="border2">
+            <div>
+              <div>
+                Gamertag: {noteObject.name}
+              </div>
               <div>
                 Wins: {noteObject.score}
               </div>

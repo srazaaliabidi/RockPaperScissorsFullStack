@@ -27,8 +27,9 @@ public class SparkDemo {
     // IDEALLY:
     // I think the URL data will be received something like:
     // "http://localhost:1234/playgame?player1Name=Joe&player1choice=rock&player2Name=Raza&player2choice=scissors"
-    Spark.get("/playgame", SparkDemo::managePlayers);
+    //Spark.get("/playgame", SparkDemo::managePlayers);
     Spark.get("/getall", SparkDemo::getForLeaderboard);
+    Spark.get("/getactive", SparkDemo::getNumActive);
   }
 
   public static String managePlayers(Request req, Response res) {
@@ -50,8 +51,6 @@ public class SparkDemo {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     System.out.println(gson.toJson(playerDTO));
     return gson.toJson(playerDTO);
-
-
   }
 
   public static String getForLeaderboard(Request req, Response res) {
@@ -60,6 +59,10 @@ public class SparkDemo {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     System.out.println(gson.toJson(playerDTO));
     return gson.toJson(playerDTO);
+  }
+
+  public static String getNumActive(Request req, Response res) {
+    return String.valueOf(WebSocketHandler.userMap.size());
   }
 
 

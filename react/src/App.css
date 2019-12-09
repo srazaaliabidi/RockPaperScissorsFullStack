@@ -41,7 +41,7 @@
 }
 .PlayerContainer{
   display: grid;
-  grid-template-columns: 30% 40% 30%;
+  grid-template-columns: 15vh 30vh 30vh;
 }
 
 

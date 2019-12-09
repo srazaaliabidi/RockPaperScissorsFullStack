@@ -219,9 +219,9 @@ function Game() {
 
       <pre> </pre>
 
-      <div className="textcenter">
+      <div className="textcenter centered">
         <div>
-          <div className="PlayerContainer textcenter">
+          <div className="PlayerContainer">
             <div>
               Player:
           </div>
@@ -233,7 +233,7 @@ function Game() {
           </div>
           </div>
           <div className="space"></div>
-          <div className="PlayerContainer textcenter">
+          <div className="PlayerContainer">
             <div className="Player">
               <div>
                 1
@@ -251,9 +251,9 @@ function Game() {
               </div>
 
             </div>
-          </div>
+          </div> 
           <div className="space"></div>
-          <div className="PlayerContainer textcenter">
+          <div className="PlayerContainer">
             <div className="Player">
               <div>
                 2

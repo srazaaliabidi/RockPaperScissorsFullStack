@@ -15,10 +15,10 @@ import './App.css';
 //Really basic Home page right now
 //Refresh leaderboard button at the top for easy checking
 //Enter a username and click next, takes you to waiting page
-const [text, setText] = React.useState(''); 
+
 
 function Home() {
-  // creates state variable, retuns tuple
+  const [text, setText] = React.useState(''); // creates state variable, retuns tuple
   const [listLeader, setListLeader] = React.useState([]);
   const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));
   const alertText = 'Please enter a valid Username (Single word, no spcaes)';
@@ -215,7 +215,7 @@ function Waiting() {
 //Then the return to home button would pop up and then everything starts over.
 //This to be added based on what is needed and what I think looks good :3
 function Game() {
-  // creates state variable, retuns tuple
+  const [text, setText] = React.useState(''); // creates state variable, retuns tuple
   const [User, setUser] = React.useState('');
   const [statusText, setStatusText] = React.useState('');
   const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));

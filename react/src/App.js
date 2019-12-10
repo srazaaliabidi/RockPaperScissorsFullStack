@@ -15,8 +15,10 @@ import './App.css';
 //Really basic Home page right now
 //Refresh leaderboard button at the top for easy checking
 //Enter a username and click next, takes you to waiting page
+const [text, setText] = React.useState(''); 
+
 function Home() {
-  const [text, setText] = React.useState(''); // creates state variable, retuns tuple
+  // creates state variable, retuns tuple
   const [listLeader, setListLeader] = React.useState([]);
   const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));
   const alertText = 'Please enter a valid Username (Single word, no spcaes)';
@@ -28,6 +30,12 @@ function Home() {
   ws.current.onmessage = (message) => {
     console.log('message received')
     console.log(message);
+    if (message.data=="WAITSCREEN"){
+      window.location = '/waiting';
+     }
+     else if (message.data== "REMOVE_WAITSCREEN_PLAY_GAME") {
+       window.location = '/game'
+     }
     // setClickCount(Number(message.data));
   };
 
@@ -41,7 +49,8 @@ function Home() {
 
   const handleClick = () => {//if a blank userame is inputed an alert will popup, if it's not then move to waiting page
     if(text !=''){
-      window.location = '/waiting';
+      //window.location = '/waiting';
+      ws.current.send(`{"name":"${text}","choice":""}`);
     }
     else{
       alert(alertText);
@@ -100,14 +109,10 @@ function Home() {
           Please Enter a Username:
         </div>
 
-        <div className="mediumspace textcenter">
-          {text}
-        </div>
-
         <div className="space"></div>
 
         <div className="textcenter">
-          <input onChange={e => setText(e.target.value)} className="Idbox" />
+          <input value={text} onChange={e => setText(e.target.value)} className="Idbox" />
         </div>
 
         <div className="space"></div>
@@ -210,7 +215,7 @@ function Waiting() {
 //Then the return to home button would pop up and then everything starts over.
 //This to be added based on what is needed and what I think looks good :3
 function Game() {
-  const [text, setText] = React.useState(''); // creates state variable, retuns tuple
+  // creates state variable, retuns tuple
   const [User, setUser] = React.useState('');
   const [statusText, setStatusText] = React.useState('');
   const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));
@@ -236,6 +241,15 @@ function Game() {
   const handleClick = () => {
     window.location = '/';
   };
+  const handleRock = () => {
+    ws.current.send(`{"name":"${text}","choice":"Rock"}`);
+  };
+  const handlePaper = () => {
+    ws.current.send(`{"name":"${text}","choice":"Paper"}`);
+  };
+  const handleScissors = () => {
+    ws.current.send(`{"name":"${text}","choice":"Scissors"}`);
+  };
   return (
     <div className="App-div Cursive">
       <pre> </pre>
@@ -245,17 +259,17 @@ function Game() {
         <div>
           <div>Rock</div>
           <div><img src={rock} className="Choice-logo" alt="Rock" /></div>
-          <button className="Cursive Button">Select</button>
+          <button onClick={handleRock} className="Cursive Button">Select</button>
         </div>
         <div>
           <div>Paper</div>
           <div><img src={paper} className="Choice-logo" alt="Paper" /></div>
-          <button className="Cursive Button">Select</button>
+          <button onClick={handlePaper} className="Cursive Button">Select</button>
         </div>
         <div>
           <div>Scissors</div>
           <div><img src={scissors} className="Choice-logo" alt="Scissors" /></div>
-          <button className="Cursive Button">Select</button>
+          <button onClick={handleScissors} className="Cursive Button">Select</button>
         </div>
       </div>
 

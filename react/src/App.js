@@ -28,6 +28,13 @@ function Home() {
   ws.current.onmessage = (message) => {
     console.log('message received')
     console.log(message);
+    if (message === 'REMOVE_WAITSCREEN_PLAY_GAME') {
+      console.log('or nah');
+      window.location = '/game';
+    }
+    else {
+      console.log(message);
+    }
     // setClickCount(Number(message.data));
   };
 
@@ -40,10 +47,13 @@ function Home() {
   };
 
   const handleClick = () => {//if a blank userame is inputed an alert will popup, if it's not then move to waiting page
-    if(text !=''){
-      window.location = '/waiting';
+    if (text != '') {
+      const init = '{"name":"';
+      const json = init.concat(text, '","choice":""}');
+      ws.current.send(json);
+      //window.location = '/waiting';
     }
-    else{
+    else {
       alert(alertText);
     }
   };
@@ -233,7 +243,7 @@ function Game() {
     console.log('ws error');
   };
   const [listLeader, setListLeader] = React.useState([]);
-  const handleClick = () => {
+  const handleClick3 = () => {
     window.location = '/';
   };
   return (
@@ -319,7 +329,7 @@ function Game() {
       <pre> </pre>
 
       <div className="textcenter">
-        <button onClick={handleClick} className="Cursive Button2">Return to Menu</button>
+        <button onClick={handleClick3} className="Cursive Button2">Return to Menu</button>
       </div>
 
 
@@ -332,18 +342,272 @@ function Game() {
 //Home(localhost:3000/), Waiting(localhost:3000/waiting), and Game(localhost:3000/game) 
 //Currently don't know if theres any way to pass variables etc between pages but I'll look into it.
 function App() {
+  const [text, setText] = React.useState(''); // creates state variable, retuns tuple
+  const [listLeader, setListLeader] = React.useState([]);
+  const [statusText, setStatusText] = React.useState('');
+  const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));
+  const alertText = 'Please enter a valid Username (Single word, no spcaes)';
+
+  ws.current.onopen = () => {
+    console.log('Connection open!')
+  };
+
+  ws.current.onmessage = (message) => {
+    console.log('message received')
+    console.log(message);
+    if (message === 'REMOVE_WAITSCREEN_PLAY_GAME') {
+      console.log('if');
+      window.location = '/game';
+    }
+    else {
+      console.log('else');
+    }
+    // setClickCount(Number(message.data));
+  };
+
+  ws.current.onclose = () => {
+    console.log('connection closed');
+  };
+
+  ws.current.onerror = () => {
+    console.log('ws error');
+  };
+
+  const handleClick = () => {//if a blank userame is inputed an alert will popup, if it's not then move to waiting page
+    if (text != '') {
+      const init = '{"name":"';
+      const json = init.concat(text, '","choice":""}');
+      ws.current.send(json);
+      //window.location = '/waiting';
+    }
+    else {
+      alert(alertText);
+    }
+  };
+  const handleClick2 = () => {
+    window.location = '/game';
+  };
+
+  const playerRefresh = () => {
+    axios.get('/getall')
+      .then((res) => {
+        setListLeader(res.data.response);
+      })
+    console.log('message send')
+
+  }
+  const handleClick3 = () => {
+    window.location = '/';
+  };
+  const leaderboardRefresh = () => {
+    ws.current.send(text);
+    axios.get('/getall')
+      .then((res) => {
+        setListLeader(res.data.response);
+      })
+    console.log('message send')
+
+  }
   return (
     <Router>
       <div>
         <Switch>
+          <Route path="/">
+            <div className="App-div Cursive">
+
+              <div className="mediumspace textright">
+                <button onClick={leaderboardRefresh} className="Cursive Button2">Manual Refresh</button>
+              </div>
+
+              <div className="textcenter">
+                Team Keyboard Presents:
+              </div>
+
+              <pre> </pre>
+
+              <div className="textcenter">
+                <div><img src={rock} className="Choice-logo" alt="Rock" /></div>
+              </div>
+
+              <pre> </pre>
+
+              <div className="Container">
+
+                <div className="textright">
+                  <div><img src={paper} className="Choice-logo" alt="Paper" /></div>
+                </div>
+
+                <div className="textcenter">
+                  <div>Rock,</div>
+                  <div>Paper,</div>
+                  <div>Scissors</div>
+                </div>
+
+                <div className="textleft">
+                  <div><img src={scissors} className="Choice-logo" alt="Scissors" /></div>
+                </div>
+
+              </div>
+
+              <pre> </pre>
+              <div className="border1 centered">
+                <div className="textcenter">
+                  Please Enter a Username:
+                </div>
+
+                <div className="mediumspace textcenter">
+                  {text}
+                </div>
+
+                <div className="space"></div>
+
+                <div className="textcenter">
+                  <input onChange={e => setText(e.target.value)} className="Idbox" />
+                </div>
+
+                <div className="space"></div>
+
+                <div className="textcenter">
+                  <button onClick={handleClick} className="Cursive Button">Enter</button>
+                </div>
+                <div className="space"></div>
+              </div>
+
+              <pre> </pre>
+
+              <div className="textcenter">
+                <img src={logo} className="App-logo" alt="logo" />
+                <div>Leaderboards:</div>
+              </div>
+
+              <div className="Leaderboard textcenter">
+                {listLeader.map(noteObject =>
+                  <div className="border2">
+                    <div>
+                      <div>
+                        Gamertag: {noteObject.name}
+                      </div>
+                      <div>
+                        Wins: {noteObject.score}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <pre> </pre>
+
+            </div>
+          </Route>
           <Route path="/waiting">
-            <Waiting />
+            <div className="App-div Cursive">
+              <div className="mediumspace textright">
+                <button onClick={playerRefresh} className="Cursive Button2">Manual Refresh</button>
+              </div>
+              <div className="bigspace"></div>
+              <div className="textcenter">Waiting for another player...</div>
+              <div className="textcenter">
+                {listLeader.map(noteObject =>
+                  <div> Available Players: {noteObject.numPlayer}
+                  </div>
+                )}
+              </div>
+              <pre> </pre>
+              <div className="textcenter">
+                <button onClick={handleClick} className="Cursive Button">Continue</button>
+              </div>
+
+            </div>
           </Route>
           <Route path="/game">
-            <Game />
-          </Route>
-          <Route path="/">
-            <Home />
+            <div className="App-div Cursive">
+              <pre> </pre>
+              <pre> </pre>
+
+              <div className="RPCContainer textcenter">
+                <div>
+                  <div>Rock</div>
+                  <div><img src={rock} className="Choice-logo" alt="Rock" /></div>
+                  <button className="Cursive Button">Select</button>
+                </div>
+                <div>
+                  <div>Paper</div>
+                  <div><img src={paper} className="Choice-logo" alt="Paper" /></div>
+                  <button className="Cursive Button">Select</button>
+                </div>
+                <div>
+                  <div>Scissors</div>
+                  <div><img src={scissors} className="Choice-logo" alt="Scissors" /></div>
+                  <button className="Cursive Button">Select</button>
+                </div>
+              </div>
+
+              <pre> </pre>
+
+              <div className="textcenter centered">
+                <div>
+                  <div className="PlayerContainer">
+                    <div>
+                      Player:
+                    </div>
+                    <div>
+                      Gamertag:
+                    </div>
+                    <div>
+                      Status:
+                    </div>
+                  </div>
+                  <div className="space"></div>
+                  <div className="PlayerContainer">
+                    <div className="Player">
+                      <div>
+                        1
+                      </div>
+                    </div>
+                    <div className="Player">
+                      <div>
+                        {text}
+                      </div>
+
+                    </div>
+                    <div className="Player">
+                      <div>
+                        {statusText}
+                      </div>
+
+                    </div>
+                  </div>
+                  <div className="space"></div>
+                  <div className="PlayerContainer">
+                    <div className="Player">
+                      <div>
+                        2
+                      </div>
+                    </div>
+                    <div className="Player">
+                      <div>
+                        {text}
+                      </div>
+
+                    </div>
+                    <div className="Player">
+                      <div>
+                        {statusText}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <pre> </pre>
+
+              <div className="textcenter">
+                <button onClick={handleClick3} className="Cursive Button2">Return to Menu</button>
+              </div>
+
+
+
+            </div>
           </Route>
         </Switch>
       </div>

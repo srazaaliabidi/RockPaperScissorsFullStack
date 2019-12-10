@@ -15,6 +15,8 @@ import './App.css';
 //Really basic Home page right now
 //Refresh leaderboard button at the top for easy checking
 //Enter a username and click next, takes you to waiting page
+
+
 function Home() {
   const [text, setText] = React.useState(''); // creates state variable, retuns tuple
   const [listLeader, setListLeader] = React.useState([]);
@@ -28,13 +30,12 @@ function Home() {
   ws.current.onmessage = (message) => {
     console.log('message received')
     console.log(message);
-    if (message === 'REMOVE_WAITSCREEN_PLAY_GAME') {
-      console.log('or nah');
-      window.location = '/game';
-    }
-    else {
-      console.log(message);
-    }
+    if (message.data=="WAITSCREEN"){
+      window.location = '/waiting';
+     }
+     else if (message.data== "REMOVE_WAITSCREEN_PLAY_GAME") {
+       window.location = '/game'
+     }
     // setClickCount(Number(message.data));
   };
 
@@ -47,11 +48,9 @@ function Home() {
   };
 
   const handleClick = () => {//if a blank userame is inputed an alert will popup, if it's not then move to waiting page
-    if (text != '') {
-      const init = '{"name":"';
-      const json = init.concat(text, '","choice":""}');
-      ws.current.send(json);
-      window.location = '/waiting';
+    if(text !=''){
+      //window.location = '/waiting';
+      ws.current.send(`{"name":"${text}","choice":""}`);
     }
     else {
       alert(alertText);
@@ -110,14 +109,10 @@ function Home() {
           Please Enter a Username:
         </div>
 
-        <div className="mediumspace textcenter">
-          {text}
-        </div>
-
         <div className="space"></div>
 
         <div className="textcenter">
-          <input onChange={e => setText(e.target.value)} className="Idbox" />
+          <input value={text} onChange={e => setText(e.target.value)} className="Idbox" />
         </div>
 
         <div className="space"></div>
@@ -246,6 +241,15 @@ function Game() {
   const handleClick3 = () => {
     window.location = '/';
   };
+  const handleRock = () => {
+    ws.current.send(`{"name":"${text}","choice":"Rock"}`);
+  };
+  const handlePaper = () => {
+    ws.current.send(`{"name":"${text}","choice":"Paper"}`);
+  };
+  const handleScissors = () => {
+    ws.current.send(`{"name":"${text}","choice":"Scissors"}`);
+  };
   return (
     <div className="App-div Cursive">
       <pre> </pre>
@@ -255,17 +259,17 @@ function Game() {
         <div>
           <div>Rock</div>
           <div><img src={rock} className="Choice-logo" alt="Rock" /></div>
-          <button className="Cursive Button">Select</button>
+          <button onClick={handleRock} className="Cursive Button">Select</button>
         </div>
         <div>
           <div>Paper</div>
           <div><img src={paper} className="Choice-logo" alt="Paper" /></div>
-          <button className="Cursive Button">Select</button>
+          <button onClick={handlePaper} className="Cursive Button">Select</button>
         </div>
         <div>
           <div>Scissors</div>
           <div><img src={scissors} className="Choice-logo" alt="Scissors" /></div>
-          <button className="Cursive Button">Select</button>
+          <button onClick={handleScissors} className="Cursive Button">Select</button>
         </div>
       </div>
 

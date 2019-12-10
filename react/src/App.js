@@ -52,7 +52,7 @@ function Home() {
       //window.location = '/waiting';
       ws.current.send(`{"name":"${text}","choice":""}`);
     }
-    else{
+    else {
       alert(alertText);
     }
   };
@@ -238,7 +238,7 @@ function Game() {
     console.log('ws error');
   };
   const [listLeader, setListLeader] = React.useState([]);
-  const handleClick = () => {
+  const handleClick3 = () => {
     window.location = '/';
   };
   const handleRock = () => {
@@ -333,7 +333,7 @@ function Game() {
       <pre> </pre>
 
       <div className="textcenter">
-        <button onClick={handleClick} className="Cursive Button2">Return to Menu</button>
+        <button onClick={handleClick3} className="Cursive Button2">Return to Menu</button>
       </div>
 
 

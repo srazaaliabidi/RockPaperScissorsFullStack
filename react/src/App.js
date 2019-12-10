@@ -28,6 +28,13 @@ function Home() {
   ws.current.onmessage = (message) => {
     console.log('message received')
     console.log(message);
+    if (message === 'REMOVE_WAITSCREEN_PLAY_GAME') {
+      console.log('or nah');
+      window.location = '/game';
+    }
+    else {
+      console.log(message);
+    }
     // setClickCount(Number(message.data));
   };
 
@@ -40,10 +47,13 @@ function Home() {
   };
 
   const handleClick = () => {//if a blank userame is inputed an alert will popup, if it's not then move to waiting page
-    if(text !=''){
+    if (text != '') {
+      const init = '{"name":"';
+      const json = init.concat(text, '","choice":""}');
+      ws.current.send(json);
       window.location = '/waiting';
     }
-    else{
+    else {
       alert(alertText);
     }
   };
@@ -233,7 +243,7 @@ function Game() {
     console.log('ws error');
   };
   const [listLeader, setListLeader] = React.useState([]);
-  const handleClick = () => {
+  const handleClick3 = () => {
     window.location = '/';
   };
   return (
@@ -319,7 +329,7 @@ function Game() {
       <pre> </pre>
 
       <div className="textcenter">
-        <button onClick={handleClick} className="Cursive Button2">Return to Menu</button>
+        <button onClick={handleClick3} className="Cursive Button2">Return to Menu</button>
       </div>
 
 

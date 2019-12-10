@@ -61,7 +61,11 @@ public class WebSocketHandler {
 
         // CREATE GSON INSTANCE AND USE IT TO INITIALIZE TRANSFERDTO OBJECT:
         Gson gson = new Gson();
+        System.out.println("try1");
         TransferDTO transferDTO_1 = gson.fromJson(message, TransferDTO.class);
+        System.out.println(transferDTO_1.name);
+        System.out.println(transferDTO_1.choice);
+        System.out.println("try2");
         // ADD TO USERMAP WITH GAMERTAG AS KEY IF CHOICE FIELD IS EMPTY:
         if (transferDTO_1.choice.equals("")) {
             String playerName = transferDTO_1.name;
@@ -125,7 +129,10 @@ public class WebSocketHandler {
 
         else if (userMap.size() == 1)  {
             System.out.println("TRIGGER WAITSCREEN");
+            System.out.println("test1");
             String playerName = transferDTO_1.name;
+            System.out.println(playerName);
+            System.out.println("test2");
             userMap.get(playerName).getRemote().sendString("WAITSCREEN");
         }
 

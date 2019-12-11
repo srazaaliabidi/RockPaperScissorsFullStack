@@ -73,10 +73,17 @@ public class WebSocketHandler {
         // IF ANOTHER SESSION IS PRESENT IN USERMAP, PAIR THEM UP:
         if (userMap.size() == 2) {
             System.out.println("THERES 2 PLAYERS");
-            // SEND MESSAGE TO REACT FRONTEND SIGNALING START OF GAME B/W 2 PLAYERS
+            Map<String, Session> tempMap = new ConcurrentHashMap<>();
+            // ADD THE TWO PLAYERS TO A TEMPORARY HASHMAP, THEN DELETE THE 2 PLAYERS FROM USERMAP
             for (String key : userMap.keySet()) {
                 System.out.println("KEY: " + key);
-                userMap.get(key).getRemote().sendString("REMOVE_WAITSCREEN_PLAY_GAME");
+                tempMap.put(key, userMap.get(key));
+            }
+            userMap.clear();
+            // SEND MESSAGE TO REACT FRONTEND SIGNALING START OF GAME B/W 2 PLAYERS
+            for (String key : tempMap.keySet()) {
+                System.out.println("KEY: " + key);
+                tempMap.get(key).getRemote().sendString("REMOVE_WAITSCREEN_PLAY_GAME");
             }
             System.out.println("REACHED HERE");
 //            ArrayList<String> playerNames = new ArrayList<>(userMap.keySet());
@@ -100,8 +107,8 @@ public class WebSocketHandler {
 
                 // IF THERE IS A TIE:
                 if (gameResults[0].equals("tie")) {
-                    userMap.get(player1Name).getRemote().sendString("TIE");
-                    userMap.get(player2Name).getRemote().sendString("TIE");
+                    tempMap.get(player1Name).getRemote().sendString("TIE");
+                    tempMap.get(player2Name).getRemote().sendString("TIE");
                 }
                 // OTHERWISE:
                 else {
@@ -111,15 +118,15 @@ public class WebSocketHandler {
                     PlayerDAO playerDAO = new PlayerDAO();
                     PlayerDTO playerDTO = playerDAO.get(winnerName, loserName);
                     // TO EACH RESPECTIVE SESSION, SEND BACK MESSAGE STATING IF THEY WON OR LOST
-                    userMap.get(loserName).getRemote().sendString("LOSER");
-                    userMap.get(winnerName).getRemote().sendString("WINNER");
+                    tempMap.get(loserName).getRemote().sendString("LOSER");
+                    tempMap.get(winnerName).getRemote().sendString("WINNER");
                 }
 
                 // CLEAR THE GAMESTATSLIST FOR FUTURE PLAYERS
                 gameStatsList.clear();
                 // TRY CLEARING JUST THE 2 PEOPLE THAT JUST FINISHED PLAYING?:
-                userMap.remove(loserName);
-                userMap.remove(winnerName);
+//                userMap.remove(loserName);
+//                userMap.remove(winnerName);
             }
 
             System.out.println("USERMAP QUEUE SIZE: " + userMap.size());

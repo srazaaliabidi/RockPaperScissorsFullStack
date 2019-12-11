@@ -57,7 +57,7 @@ public class SparkDemo {
     PlayerDAO playerDAO = new PlayerDAO();
     PlayerDTO playerDTO = playerDAO.getAllList();
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    System.out.println(gson.toJson(playerDTO));
+    //System.out.println(gson.toJson(playerDTO));
     return gson.toJson(playerDTO);
   }
 

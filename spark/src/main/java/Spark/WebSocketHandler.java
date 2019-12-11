@@ -4,6 +4,7 @@ import DTO.TransferDTO;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -20,7 +21,10 @@ import spark.Spark;
 public class WebSocketHandler {
     // Store sessions if you want to, for example, broadcast a message to all users
     static Map<Session, Session> sessionMap = new ConcurrentHashMap<>();
-    public static Map<String, Session> userMap = new ConcurrentHashMap<>(); // GAMERTAG IS KEY, GENERATED SESSION OBJECT IS VALUE
+    public static Map<String, Session> userMap = new ConcurrentHashMap<>(); // MAPS EACH GAMERTAG TO GENERATED SESSION OBJECT
+    public static ArrayList<String> queueOrder = new ArrayList<>(); // THE QUEUE DATA STRUCTURE
+    public static ArrayList<String> tempList = new ArrayList<>(); // TO HOLD 2 PLAYERS FROM QUEUE AT START OF GAME/DURING
+    public static ArrayList<TransferDTO> gameList = new ArrayList<>(); // TO STORE THE NAME AND CHOICES OF PLAYERS IN A GAME
 
     public static void broadcast(String message) {
         sessionMap.keySet().stream()
@@ -65,80 +69,62 @@ public class WebSocketHandler {
         // ADD TO USERMAP WITH GAMERTAG AS KEY IF CHOICE FIELD IS EMPTY:
         if (transferDTO_1.choice.length() == 0) {
             String playerName = transferDTO_1.name;
-            userMap.put(playerName, session);
+            processQueue(playerName, session);
         }
-
-        System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
-        // WAITING MESSAGE SHOULD BE DISPLAYED
-        // IF ANOTHER SESSION IS PRESENT IN USERMAP, PAIR THEM UP:
-        if (userMap.size() == 2) {
-            System.out.println("THERES 2 PLAYERS");
-            Map<String, Session> tempMap = new ConcurrentHashMap<>();
-            // ADD THE TWO PLAYERS TO A TEMPORARY HASHMAP, THEN DELETE THE 2 PLAYERS FROM USERMAP
-            for (String key : userMap.keySet()) {
-                System.out.println("KEY: " + key);
-                tempMap.put(key, userMap.get(key));
-            }
-            userMap.clear();
-            // SEND MESSAGE TO REACT FRONTEND SIGNALING START OF GAME B/W 2 PLAYERS
-            for (String key : tempMap.keySet()) {
-                System.out.println("KEY: " + key);
-                tempMap.get(key).getRemote().sendString("REMOVE_WAITSCREEN_PLAY_GAME");
-            }
-            System.out.println("REACHED HERE");
-//            ArrayList<String> playerNames = new ArrayList<>(userMap.keySet());
-            // ARRAYLIST OF GENERATED TRANSFERDTO OBJECTS DURING GAMEPLAY (SHOULD BE 1 FROM EACH OF THE 2 PLAYERS):
-            ArrayList<TransferDTO> gameStatsList = new ArrayList<>();
-            // THIS IS THE TRANSFERDTO OBJECT WITH THE R/P/S INPUTS FROM THE PLAYER:
-            TransferDTO transferDTO_2 = gson.fromJson(message, TransferDTO.class);
-            gameStatsList.add(transferDTO_2);
-            String winnerName = "";
-            String loserName = "";
-
-            // GAME LOGIC IS CALCULATED ONCE GAME ENDS. THIS IS INDICATED WHEN GAMESTATSLIST HAS A SIZE OF 2:
-            if (gameStatsList.size() == 2) {
-                String player1Name = gameStatsList.get(0).name;
-                String player1Choice = gameStatsList.get(0).choice;
-                String player2Name = gameStatsList.get(1).name;
-                String player2Choice = gameStatsList.get(1).choice;
-
-                // DECIDE WINNER AND LOSER HERE. GAMELOGIC IS WRAPPED IN playGame METHOD AT BOTTOM
-                String[] gameResults = playGame(player1Name, player1Choice, player2Name, player2Choice);
-
-                // IF THERE IS A TIE:
-                if (gameResults[0].equals("tie")) {
-                    tempMap.get(player1Name).getRemote().sendString("TIE");
-                    tempMap.get(player2Name).getRemote().sendString("TIE");
-                }
-                // OTHERWISE:
-                else {
-                    winnerName = gameResults[0];
-                    loserName = gameResults[1];
-                    // UPDATE THE DATABASE
-                    PlayerDAO playerDAO = new PlayerDAO();
-                    PlayerDTO playerDTO = playerDAO.get(winnerName, loserName);
-                    // TO EACH RESPECTIVE SESSION, SEND BACK MESSAGE STATING IF THEY WON OR LOST
-                    tempMap.get(loserName).getRemote().sendString("LOSER");
-                    tempMap.get(winnerName).getRemote().sendString("WINNER");
-                }
-
-                // CLEAR THE GAMESTATSLIST FOR FUTURE PLAYERS
-                gameStatsList.clear();
-                // TRY CLEARING JUST THE 2 PEOPLE THAT JUST FINISHED PLAYING?:
-//                userMap.remove(loserName);
-//                userMap.remove(winnerName);
-            }
-
-            System.out.println("USERMAP QUEUE SIZE: " + userMap.size());
-        }
-
-        else if (userMap.size() == 1)  {
-            System.out.println("TRIGGER WAITSCREEN");
+        else {
             String playerName = transferDTO_1.name;
-            userMap.get(playerName).getRemote().sendString("WAITSCREEN");
+            if (tempList.contains(playerName)) {
+                gameList.add(transferDTO_1);
+                if (gameList.size() == 2) {
+                    // AT THIS POINT, THE PLAYER CHOICES HAVE BEEN MADE, EXTRACT THEM:
+                    String player1Name = gameList.get(0).name;
+                    String player1Choice = gameList.get(0).choice;
+                    String player2Name = gameList.get(1).name;
+                    String player2Choice = gameList.get(1).choice;
+                    String[] result = playGame(player1Name, player1Choice, player2Name, player2Choice);
+                    // IF THERE IS A TIE:
+                    if (result[0].equals("tie")) {
+                        userMap.get(player1Name).getRemote().sendString("TIE");
+                        userMap.get(player2Name).getRemote().sendString("TIE");
+                    }
+                    // OTHERWISE
+                    else {
+                        String winnerName = result[0];
+                        String loserName = result[1];
+                        userMap.get(winnerName).getRemote().sendString("WINNER");
+                        userMap.get(loserName).getRemote().sendString("LOSER");
+                        userMap.remove(player1Name);
+                        userMap.remove(player2Name);
+                        gameList.clear();
+                        tempList.clear();
+                    }
+                }
+            }
         }
+    }
 
-
+    public void processQueue(String username, Session session) throws IOException {
+        queueOrder.add(username);
+        userMap.put(username, session);
+        if (queueOrder.size() == 2) {
+            // A PAIRING HAS BEEN FOUND
+            // COPY OVER ITEMS IN QUEUEORDER TO TEMPLIST
+            for (String str : queueOrder) {
+                tempList.add(str);
+            }
+            // REMOVE FIRST AND SECOND PLAYERS FROM QUEUE SINCE THEY ARE JUST MATCHED
+            queueOrder.remove(0);
+            queueOrder.remove(1);
+            // SEND MESSAGE TO START GAME
+            for (String str : tempList) {
+                userMap.get(str).getRemote().sendString("REMOVE_WAITSCREEN_PLAY_GAME");
+            }
+        }
+        // IF ONLY ONE PERSON IN QUEUE TRIGGER WAITSCREEN
+        else if (queueOrder.size() == 1) {
+            String name = queueOrder.get(0);
+            userMap.get(name).getRemote().sendString("WAITSCREEN");
+        }
     }
 
     // GAME LOGIC HERE

@@ -67,7 +67,7 @@ public class WebSocketHandler {
         System.out.println(transferDTO_1.choice);
         System.out.println("try2");
         // ADD TO USERMAP WITH GAMERTAG AS KEY IF CHOICE FIELD IS EMPTY:
-        if (transferDTO_1.choice.equals("")) {
+        if (transferDTO_1.choice.length() == 0) {
             String playerName = transferDTO_1.name;
             userMap.put(playerName, session);
         }
@@ -76,8 +76,10 @@ public class WebSocketHandler {
         // WAITING MESSAGE SHOULD BE DISPLAYED
         // IF ANOTHER SESSION IS PRESENT IN USERMAP, PAIR THEM UP:
         if (userMap.size() == 2) {
+            System.out.println("THERES 2 PLAYERS");
             // SEND MESSAGE TO REACT FRONTEND SIGNALING START OF GAME B/W 2 PLAYERS
             for (String key : userMap.keySet()) {
+                System.out.println("KEY: " + key);
                 userMap.get(key).getRemote().sendString("REMOVE_WAITSCREEN_PLAY_GAME");
             }
             System.out.println("REACHED HERE");

@@ -30,12 +30,12 @@ function Home() {
   ws.current.onmessage = (message) => {
     console.log('message received')
     console.log(message);
-    if (message.data === "WAITSCREEN") {
+    if (message.data=="WAITSCREEN"){
       window.location = '/waiting';
-    }
-    else if (message.data === "REMOVE_WAITSCREEN_PLAY_GAME") {
-      window.location = '/game'
-    }
+     }
+     else if (message.data== "REMOVE_WAITSCREEN_PLAY_GAME") {
+       window.location = '/game'
+     }
     // setClickCount(Number(message.data));
   };
 
@@ -48,7 +48,7 @@ function Home() {
   };
 
   const handleClick = () => {//if a blank userame is inputed an alert will popup, if it's not then move to waiting page
-    if (text !== '') {
+    if(text !=''){
       //window.location = '/waiting';
       ws.current.send(`{"name":"${text}","choice":""}`);
     }

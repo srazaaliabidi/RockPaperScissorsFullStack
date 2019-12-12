@@ -49,7 +49,8 @@ function App() {
   const handleClick = () => {//if a blank userame is inputed an alert will popup, if it's not then move to waiting page
     if (text != '') {
       ws.current.send(text);
-      document.getElementById("overlay").style.display = "block";
+      displayWaiting();
+      //document.getElementById("overlay").style.display = "block";
       ws.current.send(`{"name":"${text}","choice":""}`);
     }
     else {
@@ -78,9 +79,17 @@ function App() {
   function off() {
     document.getElementById("overlay").style.display = "none";
   }
-  return (
-    <div onLoad={leaderboardRefresh}>
-      <div id="overlay" className="App-div Cursive">
+
+  function displayWaiting() {
+    (document.getElementById("waitingDiv")).style.display = "block";
+    (document.getElementById("totalDiv")).style.display = "none";
+  }
+  function hideWaiting(){
+    (document.getElementById("totalDiv")).style.display = "block";
+    (document.getElementById("waitingDiv")).style.display = "none";
+  }
+  /*
+  <div id="overlay" className="App-div Cursive">
         <div className="bigspace"></div>
         <div className="textcenter">Waiting for another player...</div>
         <div className="textcenter">
@@ -91,8 +100,10 @@ function App() {
           <button onClick={off} className="Cursive Button">Continue</button>
         </div>
       </div>
-
-
+  */
+  return (
+    <div onLoad={leaderboardRefresh}>
+      
       <div id="Home" className="App-div Cursive">
         <pre></pre>
         <div className="textcenter">
@@ -147,6 +158,10 @@ function App() {
 
         <div className="mediumspace2"></div>
 
+        <div id = "waitingDiv" className="textcenter border1 centered hideInitial">Waiting for another player...</div>
+        <div id = "totalDiv" className="textcenter border1 centered showInitial">Available Players: {num}</div>
+
+        <div className="mediumspace2"></div>
 
         <div className="RPCContainer textcenter">
           <div>

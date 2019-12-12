@@ -52,6 +52,8 @@ function App() {
       displayWaiting();
       //document.getElementById("overlay").style.display = "block";
       ws.current.send(`{"name":"${text}","choice":""}`);
+      document.getElementById("overlay").style.display = "block";
+      // ws.current.send(`{"name":"${text}","choice":""}`);
     }
     else {
       alert(alertText);

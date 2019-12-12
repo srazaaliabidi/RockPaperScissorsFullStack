@@ -42,7 +42,7 @@ public class WebSocketHandler {
 
     @OnWebSocketConnect
     public void connected(Session session) throws IOException {
-        System.out.println("A client has connected");
+        System.out.println("A client has connected " + queueOrder.size());
 //        System.out.println("USERNAP QUEUE SIZE: " + userMap.size());
 
         //sessionMap.put(session, session);
@@ -66,6 +66,7 @@ public class WebSocketHandler {
         // CREATE GSON INSTANCE AND USE IT TO INITIALIZE TRANSFERDTO OBJECT:
         Gson gson = new Gson();
         TransferDTO transferDTO_1 = gson.fromJson(message, TransferDTO.class);
+        System.out.println("REACHED AFTER DTO");
         // ADD TO USERMAP WITH GAMERTAG AS KEY IF CHOICE FIELD IS EMPTY:
         if (transferDTO_1.choice.length() == 0) {
             String playerName = transferDTO_1.name;
@@ -101,30 +102,41 @@ public class WebSocketHandler {
                 }
             }
         }
+        System.out.println("END OF MESSAGE");
     }
 
     public void processQueue(String username, Session session) throws IOException {
+        System.out.println("PROCESSING");
         queueOrder.add(username);
         userMap.put(username, session);
+        System.out.println("REACHED HERE 1");
         if (queueOrder.size() == 2) {
+            System.out.println("REACHED HERE 2");
             // A PAIRING HAS BEEN FOUND
             // COPY OVER ITEMS IN QUEUEORDER TO TEMPLIST
             for (String str : queueOrder) {
                 tempList.add(str);
             }
             // REMOVE FIRST AND SECOND PLAYERS FROM QUEUE SINCE THEY ARE JUST MATCHED
-            queueOrder.remove(0);
-            queueOrder.remove(1);
+            System.out.println(queueOrder.size());
+//            queueOrder.remove(0);
+//            queueOrder.remove(1);
+            queueOrder.subList(0, 2).clear();
+            System.out.println("REACHED HERE 3");
             // SEND MESSAGE TO START GAME
             for (String str : tempList) {
+                System.out.println("USERMAP SIZE: " + userMap.size());
                 userMap.get(str).getRemote().sendString("REMOVE_WAITSCREEN_PLAY_GAME");
             }
+            System.out.println("REACHED HERE 4");
         }
         // IF ONLY ONE PERSON IN QUEUE TRIGGER WAITSCREEN
         else if (queueOrder.size() == 1) {
+            System.out.println("REACHED HERE 5");
             String name = queueOrder.get(0);
             userMap.get(name).getRemote().sendString("WAITSCREEN");
         }
+        System.out.println("END OF PROCESSING");
     }
 
     // GAME LOGIC HERE

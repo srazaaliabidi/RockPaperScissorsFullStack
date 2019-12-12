@@ -48,9 +48,10 @@ function App() {
 
   const handleClick = () => {//if a blank userame is inputed an alert will popup, if it's not then move to waiting page
     if (text != '') {
-      ws.current.send(text);
-      document.getElementById("overlay").style.display = "block";
+      // ws.current.send(text);
       ws.current.send(`{"name":"${text}","choice":""}`);
+      document.getElementById("overlay").style.display = "block";
+      // ws.current.send(`{"name":"${text}","choice":""}`);
     }
     else {
       alert(alertText);

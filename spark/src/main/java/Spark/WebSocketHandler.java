@@ -30,12 +30,12 @@ public class WebSocketHandler {
         sessionMap.keySet().stream()
                 .filter(Session::isOpen)
                 .forEach(session -> {
-            try {
-                session.getRemote().sendString(message);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+                    try {
+                        session.getRemote().sendString(message);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
 
@@ -69,6 +69,7 @@ public class WebSocketHandler {
         System.out.println("REACHED AFTER DTO");
         // ADD TO USERMAP WITH GAMERTAG AS KEY IF CHOICE FIELD IS EMPTY:
         if (transferDTO_1.choice.length() == 0) {
+            System.out.println("I'm here 0");
             String playerName = transferDTO_1.name;
             processQueue(playerName, session);
         }
@@ -78,20 +79,33 @@ public class WebSocketHandler {
                 gameList.add(transferDTO_1);
                 if (gameList.size() == 2) {
                     // AT THIS POINT, THE PLAYER CHOICES HAVE BEEN MADE, EXTRACT THEM:
+                    System.out.println("I'm here 1");
                     String player1Name = gameList.get(0).name;
                     String player1Choice = gameList.get(0).choice;
                     String player2Name = gameList.get(1).name;
                     String player2Choice = gameList.get(1).choice;
                     String[] result = playGame(player1Name, player1Choice, player2Name, player2Choice);
+                    System.out.println("RESULT: " + result[0] + result[1]);
                     // IF THERE IS A TIE:
                     if (result[0].equals("tie")) {
+                        System.out.println("I'm here 2");
                         userMap.get(player1Name).getRemote().sendString("TIE");
                         userMap.get(player2Name).getRemote().sendString("TIE");
+                        userMap.remove(player1Name);
+                        userMap.remove(player2Name);
+                        gameList.clear();
+                        tempList.clear();
                     }
                     // OTHERWISE
                     else {
+                        System.out.println("I'm here 3 " + userMap.size());
                         String winnerName = result[0];
                         String loserName = result[1];
+                        // UPDATE DATABASE
+                        PlayerDAO playerDAO = new PlayerDAO();
+                        PlayerDTO playerDTO = playerDAO.get(winnerName, loserName);
+                        System.out.println("winner is :"+winnerName);
+                        System.out.println("loser is :" +loserName);
                         userMap.get(winnerName).getRemote().sendString("WINNER");
                         userMap.get(loserName).getRemote().sendString("LOSER");
                         userMap.remove(player1Name);
@@ -146,50 +160,50 @@ public class WebSocketHandler {
         String loserName = "";
         boolean tie = false;
         switch (playerChoice1) {
-            case "Rock":
+            case "rock":
                 switch (playerChoice2) {
-                    case "Rock":
+                    case "rock":
                         //not sure what to put down for ties as of now so I'll print a tie
                         System.out.println("Its a tie");
                         tie = true;
                         break;
-                    case "Paper":
+                    case "paper":
                         winnerName = playerName2;
                         loserName = playerName1;
                         break;
-                    case "Scissors":
+                    case "scissors":
                         winnerName = playerName1;
                         loserName = playerName2;
                 }
                 break;
 
-            case "Paper":
+            case "paper":
                 switch (playerChoice2) {
-                    case "Rock":
+                    case "rock":
                         winnerName = playerName1;
                         loserName = playerName2;
                         break;
-                    case "Paper":
+                    case "paper":
                         System.out.println("Its a tie");
                         tie = true;
                         break;
-                    case "Scissors":
+                    case "scissors":
                         winnerName = playerName2;
                         loserName = playerName1;
                         break;
                 }
                 break;
-            case "Scissors":
+            case "scissors":
                 switch(playerChoice2) {
-                    case "Rock":
+                    case "rock":
                         winnerName = playerName2;
                         loserName = playerName1;
                         break;
-                    case "Paper":
+                    case "paper":
                         winnerName = playerName1;
                         loserName = playerName2;
                         break;
-                    case "Scissors":
+                    case "scissors":
                         System.out.println("It is a tie");
                         tie = true;
                         break;

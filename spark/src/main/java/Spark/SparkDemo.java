@@ -62,7 +62,7 @@ public class SparkDemo {
   }
 
   public static String getNumActive(Request req, Response res) {
-    return String.valueOf(WebSocketHandler.userMap.size());
+    return String.valueOf(WebSocketHandler.queueOrder.size());
   }
 
 

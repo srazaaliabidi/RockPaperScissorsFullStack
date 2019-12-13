@@ -21,6 +21,8 @@ public class SparkDemo {
     // calling get will make your app start listening for the GET path with the /hello endpoint
     //get("/hello", (req, res) -> "Hello World");
 
+    staticFiles.externalLocation(("/home/ubuntu/final-project-keyboard/react/build"));
+
     // FOR WEBSOCKET:
     Spark.webSocket("/ws", WebSocketHandler.class);
 

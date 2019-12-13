@@ -100,7 +100,15 @@
   width: auto;
 }
 
-hr.line {
+.hideInitial{
+  display: none;
+}
+.showInitial{
+  display: block;
+}
+
+line {
+  width: 100%;
   border: 10px solid #09d3ac;
   border-radius: 3px;
 }

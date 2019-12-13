@@ -18,7 +18,6 @@ let num = 0;
 function App() {
   const [text, setText] = React.useState(''); // creates state variable, retuns tuple
   const [listLeader, setListLeader] = React.useState([]);
-  const [statusText, setStatusText] = React.useState('');
   const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));
   const alertText = 'Please enter a valid Username (Single word, no spcaes)';
 
@@ -30,12 +29,12 @@ function App() {
     console.log('message received')
     console.log(message);
     if (message.data == "WAITSCREEN") {
-      window.location = '/waiting';
+      console.log("REACH WAIT");
+      // window.location = '/waiting';
     }
-    else if (message.data == "REMOVE_WAITSCREEN_PLAY_GAME") {
-      window.location = '/game'
+    if (message.data == "REMOVE_WAITSCREEN_PLAY_GAME") {
+      gameStart();
     }
-    // setClickCount(Number(message.data));
   };
 
   ws.current.onclose = () => {
@@ -48,12 +47,19 @@ function App() {
 
   const handleClick = () => {//if a blank userame is inputed an alert will popup, if it's not then move to waiting page
     if (text != '') {
-      ws.current.send(text);
-      displayWaiting();
-      //document.getElementById("overlay").style.display = "block";
+      //ws.current.send(text);
       ws.current.send(`{"name":"${text}","choice":""}`);
-      document.getElementById("overlay").style.display = "block";
-      // ws.current.send(`{"name":"${text}","choice":""}`);
+      displayWaiting();
+
+
+      axios.get('/getall')
+        .then((res) => {
+          setListLeader(res.data.response);
+        })
+        listLeader.map(noteObject =>
+          num = noteObject.numPlayer
+        )
+
     }
     else {
       alert(alertText);
@@ -73,9 +79,6 @@ function App() {
       .then((res) => {
         setListLeader(res.data.response);
       })
-    listLeader.map(noteObject =>
-      num = noteObject.numPlayer
-    )
   }
 
   function off() {
@@ -86,59 +89,47 @@ function App() {
     (document.getElementById("waitingDiv")).style.display = "block";
     (document.getElementById("totalDiv")).style.display = "none";
   }
-  function hideWaiting(){
+  function hideWaiting() {
     (document.getElementById("totalDiv")).style.display = "block";
     (document.getElementById("waitingDiv")).style.display = "none";
   }
-  /*
-  <div id="overlay" className="App-div Cursive">
-        <div className="bigspace"></div>
-        <div className="textcenter">Waiting for another player...</div>
-        <div className="textcenter">
-          Available Players: {num}
-        </div>
-        <pre> </pre>
-        <div className="textcenter">
-          <button onClick={off} className="Cursive Button">Continue</button>
-        </div>
-      </div>
-  */
+  function gameStart() {
+    (document.getElementById("totalDiv")).style.display = "none";
+    (document.getElementById("waitingDiv")).style.display = "none";
+    (document.getElementById("startDiv")).style.display = "block";
+  }
   return (
     <div onLoad={leaderboardRefresh}>
-      
+
       <div id="Home" className="App-div Cursive">
+        <div className="textcenter">
+          <button onClick={leaderboardRefresh} className="Cursive Button">Refresh Leaderboard</button>
+        </div>
         <pre></pre>
         <div className="textcenter">
           Team Keyboard Presents:
         </div>
-
         <pre> </pre>
-
-        <div className="textcenter">
-          <div><img src={rock} className="Choice-logo" alt="Rock" /></div>
-        </div>
-
-        <pre> </pre>
-
-        <div className="Container">
-
-          <div className="textright">
+        <div className="RPCContainer textcenter">
+          <div>
+            <div>Rock</div>
+            <div><img src={rock} className="Choice-logo" alt="Rock" /></div>
+            <button onClick={handleRock} className="Cursive Button">Select</button>
+          </div>
+          <div>
+            <div>Paper</div>
             <div><img src={paper} className="Choice-logo" alt="Paper" /></div>
+            <button onClick={handlePaper} className="Cursive Button">Select</button>
           </div>
-
-          <div className="textcenter">
-            <div>Rock,</div>
-            <div>Paper,</div>
+          <div>
             <div>Scissors</div>
-          </div>
-
-          <div className="textleft">
             <div><img src={scissors} className="Choice-logo" alt="Scissors" /></div>
+            <button onClick={handleScissors} className="Cursive Button">Select</button>
           </div>
-
         </div>
 
         <pre> </pre>
+
         <div className="border1 centered">
           <div className="textcenter">
             Please Enter a Username:
@@ -160,93 +151,15 @@ function App() {
 
         <div className="mediumspace2"></div>
 
-        <div id = "waitingDiv" className="textcenter border1 centered hideInitial">Waiting for another player...</div>
-        <div id = "totalDiv" className="textcenter border1 centered showInitial">Available Players: {num}</div>
-
-        <div className="mediumspace2"></div>
-
-        <div className="RPCContainer textcenter">
-          <div>
-            <div>Rock</div>
-            <div><img src={rock} className="Choice-logo" alt="Rock" /></div>
-            <button onClick={handleRock} className="Cursive Button">Select</button>
-          </div>
-          <div>
-            <div>Paper</div>
-            <div><img src={paper} className="Choice-logo" alt="Paper" /></div>
-            <button onClick={handlePaper} className="Cursive Button">Select</button>
-          </div>
-          <div>
-            <div>Scissors</div>
-            <div><img src={scissors} className="Choice-logo" alt="Scissors" /></div>
-            <button onClick={handleScissors} className="Cursive Button">Select</button>
-          </div>
-        </div>
-
-        <pre> </pre>
-
-        <div className="textcenter centered">
-          <div>
-            <div className="PlayerContainer">
-              <div>
-                Player:
-          </div>
-              <div>
-                Gamertag:
-          </div>
-              <div>
-                Status:
-          </div>
-            </div>
-            <div className="space"></div>
-            <div className="PlayerContainer">
-              <div className="Player">
-                <div>
-                  1
-            </div>
-              </div>
-              <div className="Player">
-                <div>
-                  {text}
-                </div>
-
-              </div>
-              <div className="Player">
-                <div>
-                  {statusText}
-                </div>
-
-              </div>
-            </div>
-            <div className="space"></div>
-            <div className="PlayerContainer">
-              <div className="Player">
-                <div>
-                  2
-            </div>
-              </div>
-              <div className="Player">
-                <div>
-                  {text}
-                </div>
-
-              </div>
-              <div className="Player">
-                <div>
-                  {statusText}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mediumspace"></div>
+        <div id="startDiv" className="textcenter border1 centered hideInitial">Game has started...</div>
+        <div id="waitingDiv" className="textcenter border1 centered hideInitial">Waiting for another player...</div>
+        <div id="totalDiv" className="textcenter border1 centered showInitial">Available Players: {num}</div>
 
         <div className="textcenter">
+        <pre> </pre>
           <img src={logo} className="App-logo" alt="logo" />
           <div>Leaderboards:</div>
         </div>
-
         <div className="Leaderboard textcenter">
           {listLeader.map(noteObject =>
             <div className="border2">
@@ -263,9 +176,6 @@ function App() {
         </div>
         <pre> </pre>
       </div>
-
-
-
 
     </div>
   )

@@ -35,6 +35,12 @@ function App() {
     if (message.data == "REMOVE_WAITSCREEN_PLAY_GAME") {
       gameStart();
     }
+    if (message.data == "WINNER") {
+      alert("You win, press enter to play again")
+    }
+    if (message.data == "LOSER") {
+      alert("You lose, press enter to play again")
+    }
   };
 
   ws.current.onclose = () => {
@@ -191,11 +197,9 @@ function Home() {
   const [listLeader, setListLeader] = React.useState([]);
   const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));
   const alertText = 'Please enter a valid Username (Single word, no spcaes)';
-
   ws.current.onopen = () => {
     console.log('Connection open!')
   };
-
   ws.current.onmessage = (message) => {
     console.log('message received')
     console.log(message);
@@ -207,15 +211,12 @@ function Home() {
     }
     // setClickCount(Number(message.data));
   };
-
   ws.current.onclose = () => {
     console.log('connection closed');
   };
-
   ws.current.onerror = () => {
     console.log('ws error');
   };
-
   const handleClick = () => {//if a blank userame is inputed an alert will popup, if it's not then move to waiting page
     if (text != '') {
       //window.location = '/waiting';
@@ -232,73 +233,53 @@ function Home() {
         setListLeader(res.data.response);
       })
     console.log('message send')
-
   }
-
   return (
     <div className="App-div Cursive">
-
       <div className="mediumspace textright">
         <button onClick={leaderboardRefresh} className="Cursive Button2">Manual Refresh</button>
       </div>
-
       <div className="textcenter">
         Team Keyboard Presents:
       </div>
-
       <pre> </pre>
-
       <div className="textcenter">
         <div><img src={rock} className="Choice-logo" alt="Rock" /></div>
       </div>
-
       <pre> </pre>
-
       <div className="Container">
-
         <div className="textright">
           <div><img src={paper} className="Choice-logo" alt="Paper" /></div>
         </div>
-
         <div className="textcenter">
           <div>Rock,</div>
           <div>Paper,</div>
           <div>Scissors</div>
         </div>
-
         <div className="textleft">
           <div><img src={scissors} className="Choice-logo" alt="Scissors" /></div>
         </div>
-
       </div>
-
       <pre> </pre>
       <div className="border1 centered">
         <div className="textcenter">
           Please Enter a Username:
         </div>
-
         <div className="space"></div>
-
         <div className="textcenter">
           <input value={text} onChange={e => setText(e.target.value)} className="Idbox" />
         </div>
-
         <div className="space"></div>
-
         <div className="textcenter">
           <button onClick={handleClick} className="Cursive Button">Enter</button>
         </div>
         <div className="space"></div>
       </div>
-
       <pre> </pre>
-
       <div className="textcenter">
         <img src={logo} className="App-logo" alt="logo" />
         <div>Leaderboards:</div>
       </div>
-
       <div className="Leaderboard textcenter">
         {listLeader.map(noteObject =>
           <div className="border2">
@@ -313,11 +294,8 @@ function Home() {
           </div>
         )}
       </div>
-
       <pre> </pre>
-
     </div>
-
   )
 }
 //Rn theres not much but I plan to fix and put active players count here
@@ -325,21 +303,17 @@ function Home() {
 //Continue button takes you to game page
 function Waiting() {
   const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));
-
   ws.current.onopen = () => {
     console.log('Connection open!')
   };
-
   ws.current.onmessage = (message) => {
     console.log('message received')
     console.log(message);
     // setClickCount(Number(message.data));
   };
-
   ws.current.onclose = () => {
     console.log('connection closed');
   };
-
   ws.current.onerror = () => {
     console.log('ws error');
   };
@@ -347,17 +321,13 @@ function Waiting() {
   const handleClick = () => {
     window.location = '/game';
   };
-
   const playerRefresh = () => {
     axios.get('/getall')
       .then((res) => {
         setListLeader(res.data.response);
       })
     console.log('message send')
-
   }
-
-
   return (
     <div className="App-div Cursive">
       <div className="mediumspace textright">
@@ -375,7 +345,6 @@ function Waiting() {
       <div className="textcenter">
         <button onClick={handleClick} className="Cursive Button">Continue</button>
       </div>
-
     </div>
   )
 }
@@ -388,21 +357,17 @@ function Game() {
   const [User, setUser] = React.useState('');
   const [statusText, setStatusText] = React.useState('');
   const ws = React.useRef(new WebSocket('ws://localhost:1234/ws'));
-
   ws.current.onopen = () => {
     console.log('Connection open!')
   };
-
   ws.current.onmessage = (message) => {
     console.log('message received')
     console.log(message);
     // setClickCount(Number(message.data));
   };
-
   ws.current.onclose = () => {
     console.log('connection closed');
   };
-
   ws.current.onerror = () => {
     console.log('ws error');
   };
@@ -423,7 +388,6 @@ function Game() {
     <div className="App-div Cursive">
       <pre> </pre>
       <pre> </pre>
-
       <div className="RPCContainer textcenter">
         <div>
           <div>Rock</div>
@@ -441,9 +405,7 @@ function Game() {
           <button onClick={handleScissors} className="Cursive Button">Select</button>
         </div>
       </div>
-
       <pre> </pre>
-
       <div className="textcenter centered">
         <div>
           <div className="PlayerContainer">
@@ -468,13 +430,11 @@ function Game() {
               <div>
                 {text}
               </div>
-
             </div>
             <div className="Player">
               <div>
                 {statusText}
               </div>
-
             </div>
           </div>
           <div className="space"></div>
@@ -488,7 +448,6 @@ function Game() {
               <div>
                 {text}
               </div>
-
             </div>
             <div className="Player">
               <div>
@@ -498,15 +457,10 @@ function Game() {
           </div>
         </div>
       </div>
-
       <pre> </pre>
-
       <div className="textcenter">
         <button onClick={handleClick3} className="Cursive Button2">Return to Menu</button>
       </div>
-
-
-
     </div>
   )
 }
